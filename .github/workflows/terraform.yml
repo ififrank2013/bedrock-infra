@@ -88,7 +88,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '### Terraform Plan Complete ✅\n\n**Safety Note:** No actual infrastructure changes are applied on PR.\n\nInfrastructure changes will only be applied when:\n1. Manual workflow dispatch is triggered with "apply" action\n\nReview the plan details in the workflow logs.'
+              body: '### Terraform Plan Complete \n\n**Safety Note:** No actual infrastructure changes are applied on PR.\n\nInfrastructure changes will only be applied when:\n1. Manual workflow dispatch is triggered with "apply" action\n\nReview the plan details in the workflow logs.'
             })
 
   terraform-apply:
@@ -130,7 +130,7 @@ jobs:
 
       - name: Manual Approval Required
         run: |
-          echo "⚠️ IMPORTANT: Review the plan above carefully!"
+          echo "IMPORTANT: Review the plan above carefully!"
           echo "This will apply changes to live AWS infrastructure."
           echo "If any unexpected changes appear, DO NOT proceed."
           echo "Continuing in 10 seconds..."
@@ -274,9 +274,9 @@ jobs:
         run: |
           LB_URL=$(kubectl get service ui-loadbalancer -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           if [ -z "$LB_URL" ]; then
-            echo "⚠️ LoadBalancer URL not yet available"
+            echo "LoadBalancer URL not yet available"
           else
-            echo "✅ Application URL: http://$LB_URL"
+            echo "Application URL: http://$LB_URL"
             echo "APPLICATION_URL=http://$LB_URL" >> $GITHUB_ENV
           fi
 
@@ -296,9 +296,9 @@ jobs:
             echo "Testing application health..."
             HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $APPLICATION_URL || echo "000")
             if [ "$HTTP_STATUS" = "200" ]; then
-              echo "✅ Application is responding with HTTP 200 OK"
+              echo "Application is responding with HTTP 200 OK"
             else
-              echo "⚠️ Application returned HTTP $HTTP_STATUS"
+              echo "Application returned HTTP $HTTP_STATUS"
             fi
           fi
         continue-on-error: true
@@ -327,9 +327,9 @@ jobs:
           CLUSTER_STATUS=$(aws eks describe-cluster --name project-bedrock-cluster --region ${{ env.AWS_REGION }} --query 'cluster.status' --output text)
           echo "EKS Cluster Status: $CLUSTER_STATUS"
           if [ "$CLUSTER_STATUS" = "ACTIVE" ]; then
-            echo "✅ EKS Cluster is ACTIVE"
+            echo "EKS Cluster is ACTIVE"
           else
-            echo "⚠️ EKS Cluster is $CLUSTER_STATUS"
+            echo "EKS Cluster is $CLUSTER_STATUS"
           fi
 
       - name: Verify Node Group
@@ -361,7 +361,7 @@ jobs:
       - name: Check S3 Bucket
         run: |
           echo "Checking S3 bucket..."
-          aws s3 ls bedrock-assets-alt-soe-025-0275/ --recursive || echo "⚠️ S3 bucket not accessible"
+          aws s3 ls bedrock-assets-alt-soe-025-0275/ --recursive || echo "S3 bucket not accessible"
 
       - name: Verify Lambda Function
         run: |
@@ -374,7 +374,7 @@ jobs:
 
       - name: Infrastructure Status Summary
         run: |
-          echo "## Infrastructure Validation Complete ✅"
+          echo "## Infrastructure Validation Complete"
           echo ""
           echo "All running infrastructure has been verified:"
           echo "- EKS Cluster: ACTIVE"
