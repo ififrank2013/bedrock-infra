@@ -185,10 +185,10 @@ You can customize the deployment by modifying variables in `terraform/variables.
 ```hcl
 aws_region           = "us-east-1"
 cluster_name         = "project-bedrock-cluster"
-cluster_version      = "1.31"
-node_instance_types  = ["t3.large"]
+cluster_version      = "1.34"
+node_instance_types  = ["t3.small"]
 enable_rds           = true
-enable_alb_ingress   = true
+enable_alb_ingress   = false
 ```
 
 ## Security
