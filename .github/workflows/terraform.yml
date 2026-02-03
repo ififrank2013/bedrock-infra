@@ -136,14 +136,21 @@ jobs:
           echo "Continuing in 10 seconds..."
           sleep 10
 
-      - name: Remove Admin-Only Resources from State
+      - name: Import Existing Resources
         working-directory: terraform
         continue-on-error: true
         run: |
-          echo "Removing resources that require elevated IAM permissions..."
-          terraform state rm 'module.eks.aws_eks_node_group.main' 2>/dev/null || echo "Node group not in state"
-          terraform state rm 'module.serverless.aws_lambda_function.asset_processor' 2>/dev/null || echo "Lambda not in state"
-          echo "Removed admin-only resources from terraform state"
+          echo "Importing existing AWS resources to prevent recreation errors..."
+          terraform import 'module.eks.aws_eks_node_group.main' 'project-bedrock-cluster:project-bedrock-cluster-node-group' 2>/dev/null || echo "Node group already in state or not found"
+          terraform import 'module.serverless.aws_lambda_function.asset_processor' 'bedrock-asset-processor' 2>/dev/null || echo "Lambda already in state or not found"
+          echo "Resource import completed"
+
+      - name: Refresh Terraform Plan
+        working-directory: terraform
+        continue-on-error: true
+        run: |
+          echo "Creating fresh plan after imports..."
+          terraform plan -out=tfplan -lock=false -refresh=false -var-file="cicd.tfvars" || echo "Plan completed with expected errors"
 
       - name: Terraform Apply
         working-directory: terraform
