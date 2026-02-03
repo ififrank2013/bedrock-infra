@@ -213,7 +213,7 @@ jobs:
         run: |
           aws eks update-kubeconfig --name project-bedrock-cluster --region ${{ env.AWS_REGION }}
           kubectl cluster-info
-          kubectl get nodes
+          kubectl get nodes || echo "Note: User lacks permissions to list nodes (expected)"
 
       - name: Create retail-app namespace
         run: |
