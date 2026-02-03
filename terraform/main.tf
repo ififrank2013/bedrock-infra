@@ -107,6 +107,7 @@ module "observability" {
 
 module "k8s_rbac" {
   source = "./modules/k8s-rbac"
+  count  = var.enable_k8s_rbac ? 1 : 0
 
   developer_iam_arn = module.iam.developer_user_arn
   node_role_arn     = module.eks.node_group_role_arn

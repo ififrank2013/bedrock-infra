@@ -120,8 +120,9 @@ variable "enable_alb_ingress" {
   default     = false
 }
 
-variable "domain_name" {
-  description = "Domain name for the application (use nip.io for testing)"
-  type        = string
-  default     = ""
+variable "enable_k8s_rbac" {
+  description = "Enable Kubernetes RBAC module (requires admin credentials)"
+  type        = bool
+  default     = true
 }
+
