@@ -276,6 +276,7 @@ jobs:
                 port: 80
                 targetPort: 8080
           EOF
+        continue-on-error: true
 
       - name: Wait for LoadBalancer provisioning
         run: |
