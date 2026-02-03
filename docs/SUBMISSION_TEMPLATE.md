@@ -1,680 +1,680 @@
-# Project Bedrock - Submission Document
+#ProjectBedrock-SubmissionDocument
 
-**Student Information**
-- **Name**: [Your Full Name]
-- **Student ID**: ALT/SOE/025/0275
-- **GitHub Username**: ififrank2013
-- **Email**: [Your Email]
-- **Date**: February 2026
-
----
-
-## 1. Git Repository Link
-
-**Repository URL**: https://github.com/ififrank2013/bedrock-infra
-
-**Repository Access**: Public (or invite Innocent Chukwuemeka if private)
-
-**Key Files**:
-- `/terraform/` - All Terraform IaC code
-- `/k8s/` - Kubernetes manifests and Helm values
-- `/lambda/` - Lambda function code
-- `/.github/workflows/` - CI/CD pipeline
-- `/grading.json` - Terraform outputs for grading
-- `/README.md` - Complete documentation
+**StudentInformation**
+-**Name**:[YourFullName]
+-**StudentID**:ALT/SOE/025/0275
+-**GitHubUsername**:ififrank2013
+-**Email**:[YourEmail]
+-**Date**:February2026
 
 ---
 
-## 2. Architecture Diagram
+##1.GitRepositoryLink
 
-**Diagram URL**: [Link to architecture diagram image or PDF]
+**RepositoryURL**:https://github.com/ififrank2013/bedrock-infra
 
-**Key Components**:
+**RepositoryAccess**:Public(orinviteInnocentChukwuemekaifprivate)
 
-### Network Layer
-- **VPC**: `project-bedrock-vpc` (10.0.0.0/16)
-- **Public Subnets**: 2 subnets across us-east-1a and us-east-1b
-- **Private Subnets**: 2 subnets across us-east-1a and us-east-1b
-- **NAT Gateways**: 2 NAT Gateways for high availability
-- **Internet Gateway**: For public subnet internet access
-
-### Compute Layer
-- **EKS Cluster**: `project-bedrock-cluster` (Kubernetes v1.31)
-- **Node Group**: t3.large instances, 2-5 nodes
-- **Namespace**: `retail-app` for application isolation
-
-### Application Layer
-- **UI Service**: Web frontend
-- **Catalog Service**: Product catalog management
-- **Orders Service**: Order processing
-- **Cart Service**: Shopping cart functionality
-- **Checkout Service**: Payment processing
-- **Assets Service**: Static asset serving
-
-### Data Layer (Bonus)
-- **RDS MySQL**: Catalog database (Multi-AZ, encrypted, automated backups)
-- **RDS PostgreSQL**: Orders database (Multi-AZ, encrypted, automated backups)
-- **Redis**: Session cache
-- **RabbitMQ**: Message queue
-
-### Serverless Layer
-- **S3 Bucket**: `bedrock-assets-alt-soe-025-0275` for product images
-- **Lambda Function**: `bedrock-asset-processor` for image processing
-- **CloudWatch**: Centralized logging and monitoring
-
-### Networking Layer (Bonus)
-- **Application Load Balancer**: Internet-facing ALB
-- **Ingress Controller**: AWS Load Balancer Controller
-- **TLS**: Optional HTTPS with ACM certificate
+**KeyFiles**:
+-`/terraform/`-AllTerraformIaCcode
+-`/k8s/`-KubernetesmanifestsandHelmvalues
+-`/lambda/`-Lambdafunctioncode
+-`/.github/workflows/`-CI/CDpipeline
+-`/grading.json`-Terraformoutputsforgrading
+-`/README.md`-Completedocumentation
 
 ---
 
-## 3. Deployment Guide
+##2.ArchitectureDiagram
 
-### Quick Start
+**DiagramURL**:[LinktoarchitecturediagramimageorPDF]
+
+**KeyComponents**:
+
+###NetworkLayer
+-**VPC**:`project-bedrock-vpc`(10.0.0.0/16)
+-**PublicSubnets**:2subnetsacrossus-east-1aandus-east-1b
+-**PrivateSubnets**:2subnetsacrossus-east-1aandus-east-1b
+-**NATGateways**:2NATGatewaysforhighavailability
+-**InternetGateway**:Forpublicsubnetinternetaccess
+
+###ComputeLayer
+-**EKSCluster**:`project-bedrock-cluster`(Kubernetesv1.31)
+-**NodeGroup**:t3.largeinstances,2-5nodes
+-**Namespace**:`retail-app`forapplicationisolation
+
+###ApplicationLayer
+-**UIService**:Webfrontend
+-**CatalogService**:Productcatalogmanagement
+-**OrdersService**:Orderprocessing
+-**CartService**:Shoppingcartfunctionality
+-**CheckoutService**:Paymentprocessing
+-**AssetsService**:Staticassetserving
+
+###DataLayer(Bonus)
+-**RDSMySQL**:Catalogdatabase(Multi-AZ,encrypted,automatedbackups)
+-**RDSPostgreSQL**:Ordersdatabase(Multi-AZ,encrypted,automatedbackups)
+-**Redis**:Sessioncache
+-**RabbitMQ**:Messagequeue
+
+###ServerlessLayer
+-**S3Bucket**:`bedrock-assets-alt-soe-025-0275`forproductimages
+-**LambdaFunction**:`bedrock-asset-processor`forimageprocessing
+-**CloudWatch**:Centralizedloggingandmonitoring
+
+###NetworkingLayer(Bonus)
+-**ApplicationLoadBalancer**:Internet-facingALB
+-**IngressController**:AWSLoadBalancerController
+-**TLS**:OptionalHTTPSwithACMcertificate
+
+---
+
+##3.DeploymentGuide
+
+###QuickStart
 
 **Prerequisites**:
-- AWS CLI v2.x
-- Terraform v1.5+
-- kubectl v1.28+
-- Helm v3.13+
-- Git
+-AWSCLIv2.x
+-Terraformv1.5+
+-kubectlv1.28+
+-Helmv3.13+
+-Git
 
-**Step 1: Clone Repository**
+**Step1:CloneRepository**
 ```bash
-git clone https://github.com/ififrank2013/bedrock-infra.git
-cd bedrock-infra
+gitclonehttps://github.com/ififrank2013/bedrock-infra.git
+cdbedrock-infra
 ```
 
-**Step 2: Setup Backend**
+**Step2:SetupBackend**
 ```bash
-cd scripts
-./setup-backend.sh  # or setup-backend.ps1 on Windows
+cdscripts
+./setup-backend.sh#orsetup-backend.ps1onWindows
 ```
 
-**Step 3: Deploy Infrastructure**
+**Step3:DeployInfrastructure**
 ```bash
-cd ../terraform
-terraform init
-terraform plan
-terraform apply
+cd../terraform
+terraforminit
+terraformplan
+terraformapply
 ```
 
-**Step 4: Configure kubectl**
+**Step4:Configurekubectl**
 ```bash
-aws eks update-kubeconfig --name project-bedrock-cluster --region us-east-1
+awseksupdate-kubeconfig--nameproject-bedrock-cluster--regionus-east-1
 ```
 
-**Step 5: Deploy Application**
+**Step5:DeployApplication**
 ```bash
-cd ../scripts
-./deploy-app.sh  # or deploy-app.ps1 on Windows
+cd../scripts
+./deploy-app.sh#ordeploy-app.ps1onWindows
 ```
 
-**Step 6: Access Application**
+**Step6:AccessApplication**
 ```bash
-kubectl get ingress -n retail-app
-# Access the ALB URL shown in the ADDRESS column
+kubectlgetingress-nretail-app
+#AccesstheALBURLshownintheADDRESScolumn
 ```
 
-### Detailed Documentation
+###DetailedDocumentation
 
-For comprehensive step-by-step instructions, see:
-- **README.md**: Overview and quick start
-- **docs/DEPLOYMENT_GUIDE.md**: Detailed deployment guide with troubleshooting
+Forcomprehensivestep-by-stepinstructions,see:
+-**README.md**:Overviewandquickstart
+-**docs/DEPLOYMENT_GUIDE.md**:Detaileddeploymentguidewithtroubleshooting
 
 ---
 
-## 4. Application URL
+##4.ApplicationURL
 
-**Retail Store Application**:
-- **URL**: http://[ALB-DNS-NAME]
-- **Example**: http://k8s-retailap-xxxxxxxx-yyyyyyyy.us-east-1.elb.amazonaws.com
+**RetailStoreApplication**:
+-**URL**:http://[ALB-DNS-NAME]
+-**Example**:http://k8s-retailap-xxxxxxxx-yyyyyyyy.us-east-1.elb.amazonaws.com
 
-**How to Get URL**:
+**HowtoGetURL**:
 ```bash
-kubectl get ingress retail-app-ingress -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+kubectlgetingressretail-app-ingress-nretail-app-ojsonpath='{.status.loadBalancer.ingress[0].hostname}'
 ```
 
-**Application Features**:
-- Product browsing
-- Shopping cart
-- Order placement
-- User authentication
-- Asset management
+**ApplicationFeatures**:
+-Productbrowsing
+-Shoppingcart
+-Orderplacement
+-Userauthentication
+-Assetmanagement
 
-**Health Check**:
+**HealthCheck**:
 ```bash
-curl http://[ALB-DNS-NAME]/
-# Should return 200 OK with HTML content
-```
-
----
-
-## 5. Grading Credentials
-
-### Developer IAM User: `bedrock-dev-view`
-
-**Access Key ID**: `[Retrieved from Terraform output]`
-
-**To retrieve credentials**:
-```bash
-cd terraform
-terraform output developer_access_key_id
-terraform output developer_secret_access_key
-```
-
-**Secret Access Key**: `[Retrieved from Terraform output - KEEP SECURE]`
-
-**User Permissions**:
-- **AWS Console**: ReadOnlyAccess policy (view resources, cannot modify)
-- **Kubernetes**: View ClusterRole (read-only access to all namespaces)
-
-**Test Commands**:
-```bash
-# Configure AWS CLI with these credentials
-aws configure --profile bedrock-dev
-
-# Test AWS read access
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev
-
-# Configure kubectl
-aws eks update-kubeconfig --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev
-
-# Test Kubernetes read access (should work)
-kubectl get pods -n retail-app
-kubectl get nodes
-kubectl describe pod [POD-NAME] -n retail-app
-
-# Test write access (should fail)
-kubectl delete pod [POD-NAME] -n retail-app
-# Expected: Error - Forbidden
+curlhttp://[ALB-DNS-NAME]/
+#Shouldreturn200OKwithHTMLcontent
 ```
 
 ---
 
-## 6. Grading Data
+##5.GradingCredentials
 
-### Terraform Outputs
+###DeveloperIAMUser:`bedrock-dev-view`
 
-**grading.json Location**: `/grading.json` in repository root
+**AccessKeyID**:`[RetrievedfromTerraformoutput]`
 
-**To generate/update**:
+**Toretrievecredentials**:
 ```bash
-cd terraform
-terraform output -json > ../grading.json
+cdterraform
+terraformoutputdeveloper_access_key_id
+terraformoutputdeveloper_secret_access_key
 ```
 
-**Key Outputs** (from grading.json):
-- `cluster_endpoint`: EKS API server endpoint
-- `cluster_name`: "project-bedrock-cluster"
-- `region`: "us-east-1"
-- `vpc_id`: VPC identifier
-- `assets_bucket_name`: "bedrock-assets-alt-soe-025-0275"
+**SecretAccessKey**:`[RetrievedfromTerraformoutput-KEEPSECURE]`
 
-### Resource Verification Commands
+**UserPermissions**:
+-**AWSConsole**:ReadOnlyAccesspolicy(viewresources,cannotmodify)
+-**Kubernetes**:ViewClusterRole(read-onlyaccesstoallnamespaces)
 
-**EKS Cluster**:
+**TestCommands**:
 ```bash
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --query 'cluster.{Name:name,Status:status,Version:version,Endpoint:endpoint}'
+#ConfigureAWSCLIwiththesecredentials
+awsconfigure--profilebedrock-dev
+
+#TestAWSreadaccess
+awseksdescribe-cluster--nameproject-bedrock-cluster--regionus-east-1--profilebedrock-dev
+
+#Configurekubectl
+awseksupdate-kubeconfig--nameproject-bedrock-cluster--regionus-east-1--profilebedrock-dev
+
+#TestKubernetesreadaccess(shouldwork)
+kubectlgetpods-nretail-app
+kubectlgetnodes
+kubectldescribepod[POD-NAME]-nretail-app
+
+#Testwriteaccess(shouldfail)
+kubectldeletepod[POD-NAME]-nretail-app
+#Expected:Error-Forbidden
+```
+
+---
+
+##6.GradingData
+
+###TerraformOutputs
+
+**grading.jsonLocation**:`/grading.json`inrepositoryroot
+
+**Togenerate/update**:
+```bash
+cdterraform
+terraformoutput-json>../grading.json
+```
+
+**KeyOutputs**(fromgrading.json):
+-`cluster_endpoint`:EKSAPIserverendpoint
+-`cluster_name`:"project-bedrock-cluster"
+-`region`:"us-east-1"
+-`vpc_id`:VPCidentifier
+-`assets_bucket_name`:"bedrock-assets-alt-soe-025-0275"
+
+###ResourceVerificationCommands
+
+**EKSCluster**:
+```bash
+awseksdescribe-cluster--nameproject-bedrock-cluster--regionus-east-1--query'cluster.{Name:name,Status:status,Version:version,Endpoint:endpoint}'
 ```
 
 **VPC**:
 ```bash
-aws ec2 describe-vpcs --filters "Name=tag:Name,Values=project-bedrock-vpc" --query 'Vpcs[0].{VpcId:VpcId,CidrBlock:CidrBlock}'
+awsec2describe-vpcs--filters"Name=tag:Name,Values=project-bedrock-vpc"--query'Vpcs[0].{VpcId:VpcId,CidrBlock:CidrBlock}'
 ```
 
-**Application Pods**:
+**ApplicationPods**:
 ```bash
-kubectl get pods -n retail-app -o wide
+kubectlgetpods-nretail-app-owide
 ```
 
-**S3 Bucket**:
+**S3Bucket**:
 ```bash
-aws s3 ls s3://bedrock-assets-alt-soe-025-0275
+awss3lss3://bedrock-assets-alt-soe-025-0275
 ```
 
-**Lambda Function**:
+**LambdaFunction**:
 ```bash
-aws lambda get-function --function-name bedrock-asset-processor --query 'Configuration.{FunctionName:FunctionName,Runtime:Runtime,Handler:Handler}'
+awslambdaget-function--function-namebedrock-asset-processor--query'Configuration.{FunctionName:FunctionName,Runtime:Runtime,Handler:Handler}'
 ```
 
 ---
 
-## 7. Core Requirements Completion
+##7.CoreRequirementsCompletion
 
-### ✅ 4.1 Infrastructure as Code (IaC)
+###✅4.1InfrastructureasCode(IaC)
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- All infrastructure defined in Terraform
-- VPC with public/private subnets across 2 AZs (us-east-1a, us-east-1b)
-- EKS cluster v1.31 named `project-bedrock-cluster`
-- IAM roles follow least-privilege principle
-- Remote state in S3 with DynamoDB locking
+-AllinfrastructuredefinedinTerraform
+-VPCwithpublic/privatesubnetsacross2AZs(us-east-1a,us-east-1b)
+-EKSclusterv1.31named`project-bedrock-cluster`
+-IAMrolesfollowleast-privilegeprinciple
+-RemotestateinS3withDynamoDBlocking
 
-**Files**: `/terraform/main.tf`, `/terraform/modules/`
+**Files**:`/terraform/main.tf`,`/terraform/modules/`
 
 ---
 
-### ✅ 4.2 Application Deployment
+###✅4.2ApplicationDeployment
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- Retail Store Sample App deployed via Helm
-- Running in `retail-app` namespace
-- In-cluster dependencies (MySQL, PostgreSQL, Redis, RabbitMQ)
-- All pods healthy and running
+-RetailStoreSampleAppdeployedviaHelm
+-Runningin`retail-app`namespace
+-In-clusterdependencies(MySQL,PostgreSQL,Redis,RabbitMQ)
+-Allpodshealthyandrunning
 
-**Files**: `/k8s/retail-app-values.yaml`
+**Files**:`/k8s/retail-app-values.yaml`
 
 **Verification**:
 ```bash
-kubectl get pods -n retail-app
-# All pods should show STATUS: Running
+kubectlgetpods-nretail-app
+#AllpodsshouldshowSTATUS:Running
 ```
 
 ---
 
-### ✅ 4.3 Secure Developer Access
+###✅4.3SecureDeveloperAccess
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- IAM user `bedrock-dev-view` created
-- AWS Console: ReadOnlyAccess policy attached
-- Kubernetes: Mapped to `view` ClusterRole
-- Access keys generated and provided
+-IAMuser`bedrock-dev-view`created
+-AWSConsole:ReadOnlyAccesspolicyattached
+-Kubernetes:Mappedto`view`ClusterRole
+-Accesskeysgeneratedandprovided
 
-**Files**: `/terraform/modules/iam/`, `/terraform/modules/k8s-rbac/`
+**Files**:`/terraform/modules/iam/`,`/terraform/modules/k8s-rbac/`
 
 **Verification**:
 ```bash
-# Read access works
-kubectl get pods -n retail-app --as system:serviceaccount:retail-app:default
+#Readaccessworks
+kubectlgetpods-nretail-app--assystem:serviceaccount:retail-app:default
 
-# Write access denied
-kubectl delete pod [POD] -n retail-app --as system:serviceaccount:retail-app:default
+#Writeaccessdenied
+kubectldeletepod[POD]-nretail-app--assystem:serviceaccount:retail-app:default
 ```
 
 ---
 
-### ✅ 4.4 Observability (Logging)
+###✅4.4Observability(Logging)
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- EKS Control Plane logging enabled (API, Audit, Authenticator, ControllerManager, Scheduler)
-- CloudWatch Observability add-on installed
-- Container logs shipping to CloudWatch
-- Log groups created with proper retention
+-EKSControlPlaneloggingenabled(API,Audit,Authenticator,ControllerManager,Scheduler)
+-CloudWatchObservabilityadd-oninstalled
+-ContainerlogsshippingtoCloudWatch
+-Loggroupscreatedwithproperretention
 
-**Files**: `/terraform/modules/observability/`
+**Files**:`/terraform/modules/observability/`
 
 **Verification**:
 ```bash
-# Control plane logs
-aws logs describe-log-groups --log-group-name-prefix /aws/eks/project-bedrock-cluster
+#Controlplanelogs
+awslogsdescribe-log-groups--log-group-name-prefix/aws/eks/project-bedrock-cluster
 
-# Container logs
-kubectl logs -f deployment/ui -n retail-app
+#Containerlogs
+kubectllogs-fdeployment/ui-nretail-app
 ```
 
 ---
 
-### ✅ 4.5 Event-Driven Extension (Serverless)
+###✅4.5Event-DrivenExtension(Serverless)
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- S3 bucket: `bedrock-assets-alt-soe-025-0275`
-- Lambda function: `bedrock-asset-processor`
-- S3 event notification configured
-- Lambda logs file uploads to CloudWatch
+-S3bucket:`bedrock-assets-alt-soe-025-0275`
+-Lambdafunction:`bedrock-asset-processor`
+-S3eventnotificationconfigured
+-LambdalogsfileuploadstoCloudWatch
 
-**Files**: `/lambda/asset_processor.py`, `/terraform/modules/serverless/`
+**Files**:`/lambda/asset_processor.py`,`/terraform/modules/serverless/`
 
 **Verification**:
 ```bash
-# Upload test file
-echo "Test" > test.jpg
-aws s3 cp test.jpg s3://bedrock-assets-alt-soe-025-0275/
+#Uploadtestfile
+echo"Test">test.jpg
+awss3cptest.jpgs3://bedrock-assets-alt-soe-025-0275/
 
-# Check logs
-aws logs tail /aws/lambda/bedrock-asset-processor --follow
-# Should show: "Image received: test.jpg"
+#Checklogs
+awslogstail/aws/lambda/bedrock-asset-processor--follow
+#Shouldshow:"Imagereceived:test.jpg"
 ```
 
 ---
 
-### ✅ 4.6 CI/CD Automation
+###✅4.6CI/CDAutomation
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- GitHub Actions workflow configured
-- Pull Request: Runs `terraform plan`
-- Merge to Main: Runs `terraform apply`
-- AWS credentials stored as GitHub secrets
-- Automatic application deployment
+-GitHubActionsworkflowconfigured
+-PullRequest:Runs`terraformplan`
+-MergetoMain:Runs`terraformapply`
+-AWScredentialsstoredasGitHubsecrets
+-Automaticapplicationdeployment
 
-**Files**: `/.github/workflows/terraform.yml`
+**Files**:`/.github/workflows/terraform.yml`
 
-**Pipeline Features**:
-- Terraform format check
-- Terraform validation
-- Plan preview on PR
-- Auto-apply on merge
-- Application deployment
-- grading.json generation
+**PipelineFeatures**:
+-Terraformformatcheck
+-Terraformvalidation
+-PlanpreviewonPR
+-Auto-applyonmerge
+-Applicationdeployment
+-grading.jsongeneration
 
 ---
 
-## 8. Bonus Objectives Completion
+##8.BonusObjectivesCompletion
 
-### ✅ 5.1 Managed Persistence Layer
+###✅5.1ManagedPersistenceLayer
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- RDS MySQL instance for Catalog service
-- RDS PostgreSQL instance for Orders service
-- Multi-AZ deployment for high availability
-- Automated backups with 7-day retention
-- Encryption at rest enabled
-- Credentials stored in AWS Secrets Manager
+-RDSMySQLinstanceforCatalogservice
+-RDSPostgreSQLinstanceforOrdersservice
+-Multi-AZdeploymentforhighavailability
+-Automatedbackupswith7-dayretention
+-Encryptionatrestenabled
+-CredentialsstoredinAWSSecretsManager
 
-**Files**: `/terraform/modules/rds/`, `/k8s/retail-app-values-rds.yaml`
+**Files**:`/terraform/modules/rds/`,`/k8s/retail-app-values-rds.yaml`
 
-**Cost Optimization**:
-- Using db.t3.micro instances
-- GP3 storage for better price/performance
-- Automated backups during low-traffic hours
+**CostOptimization**:
+-Usingdb.t3.microinstances
+-GP3storageforbetterprice/performance
+-Automatedbackupsduringlow-traffichours
 
 **Verification**:
 ```bash
-aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,Engine,DBInstanceStatus]'
+awsrdsdescribe-db-instances--query'DBInstances[*].[DBInstanceIdentifier,Engine,DBInstanceStatus]'
 ```
 
 ---
 
-### ✅ 5.2 Advanced Networking & Ingress
+###✅5.2AdvancedNetworking&Ingress
 
-**Status**: Complete
+**Status**:Complete
 
 **Evidence**:
-- AWS Load Balancer Controller installed
-- Ingress resource configured
-- Application Load Balancer provisioned
-- Internet-facing access enabled
-- Target type: IP mode for EKS
-- Health checks configured
+-AWSLoadBalancerControllerinstalled
+-Ingressresourceconfigured
+-ApplicationLoadBalancerprovisioned
+-Internet-facingaccessenabled
+-Targettype:IPmodeforEKS
+-Healthchecksconfigured
 
-**Files**: `/terraform/modules/alb-controller/`, `/k8s/ingress.yaml`
+**Files**:`/terraform/modules/alb-controller/`,`/k8s/ingress.yaml`
 
-**Optional Features**:
-- TLS termination support (with ACM certificate)
-- HTTPS redirect capability
-- Custom domain support
+**OptionalFeatures**:
+-TLSterminationsupport(withACMcertificate)
+-HTTPSredirectcapability
+-Customdomainsupport
 
 **Verification**:
 ```bash
-kubectl get ingress -n retail-app
-# Should show ADDRESS with ALB DNS name
+kubectlgetingress-nretail-app
+#ShouldshowADDRESSwithALBDNSname
 ```
 
 ---
 
-## 9. Compliance with Technical Standards
+##9.CompliancewithTechnicalStandards
 
-### ✅ Naming Conventions
+###✅NamingConventions
 
-| Resource | Required Name | Actual Name | ✅ |
+|Resource|RequiredName|ActualName|✅|
 |----------|--------------|-------------|-----|
-| AWS Region | us-east-1 | us-east-1 | ✅ |
-| EKS Cluster | project-bedrock-cluster | project-bedrock-cluster | ✅ |
-| VPC | project-bedrock-vpc | project-bedrock-vpc | ✅ |
-| Namespace | retail-app | retail-app | ✅ |
-| IAM User | bedrock-dev-view | bedrock-dev-view | ✅ |
-| S3 Bucket | bedrock-assets-[student-id] | bedrock-assets-alt-soe-025-0275 | ✅ |
-| Lambda | bedrock-asset-processor | bedrock-asset-processor | ✅ |
+|AWSRegion|us-east-1|us-east-1|✅|
+|EKSCluster|project-bedrock-cluster|project-bedrock-cluster|✅|
+|VPC|project-bedrock-vpc|project-bedrock-vpc|✅|
+|Namespace|retail-app|retail-app|✅|
+|IAMUser|bedrock-dev-view|bedrock-dev-view|✅|
+|S3Bucket|bedrock-assets-[student-id]|bedrock-assets-alt-soe-025-0275|✅|
+|Lambda|bedrock-asset-processor|bedrock-asset-processor|✅|
 
-### ✅ Resource Tagging
+###✅ResourceTagging
 
-All resources tagged with:
+Allresourcestaggedwith:
 ```
-Project: barakat-2025-capstone
-ManagedBy: Terraform
-Environment: production
-StudentID: ALT-SOE-025-0275
+Project:barakat-2025-capstone
+ManagedBy:Terraform
+Environment:production
+StudentID:ALT-SOE-025-0275
 ```
 
 **Verification**:
 ```bash
-# Check EKS tags
-aws eks describe-cluster --name project-bedrock-cluster --query 'cluster.tags'
+#CheckEKStags
+awseksdescribe-cluster--nameproject-bedrock-cluster--query'cluster.tags'
 
-# Check VPC tags
-aws ec2 describe-vpcs --filters "Name=tag:Name,Values=project-bedrock-vpc" --query 'Vpcs[0].Tags'
+#CheckVPCtags
+awsec2describe-vpcs--filters"Name=tag:Name,Values=project-bedrock-vpc"--query'Vpcs[0].Tags'
 ```
 
-### ✅ Terraform Outputs
+###✅TerraformOutputs
 
-Required outputs present in root module:
-- ✅ cluster_endpoint
-- ✅ cluster_name
-- ✅ region
-- ✅ vpc_id
-- ✅ assets_bucket_name
+Requiredoutputspresentinrootmodule:
+-✅cluster_endpoint
+-✅cluster_name
+-✅region
+-✅vpc_id
+-✅assets_bucket_name
 
 **Verification**:
 ```bash
-cd terraform
-terraform output
+cdterraform
+terraformoutput
 ```
 
 ---
 
-## 10. Testing and Validation
+##10.TestingandValidation
 
-### Application Testing
+###ApplicationTesting
 
-**Test 1: Web Interface**
+**Test1:WebInterface**
 ```bash
-# Get URL
-ALB_URL=$(kubectl get ingress retail-app-ingress -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+#GetURL
+ALB_URL=$(kubectlgetingressretail-app-ingress-nretail-app-ojsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
-# Test homepage
-curl -I http://$ALB_URL
-# Expected: HTTP/1.1 200 OK
+#Testhomepage
+curl-Ihttp://$ALB_URL
+#Expected:HTTP/1.1200OK
 
-# Open in browser
-open http://$ALB_URL
+#Openinbrowser
+openhttp://$ALB_URL
 ```
 
-**Test 2: Service Communication**
+**Test2:ServiceCommunication**
 ```bash
-# Test internal service communication
-kubectl exec -it deployment/ui -n retail-app -- curl catalog:8080/health
-# Expected: {"status":"healthy"}
+#Testinternalservicecommunication
+kubectlexec-itdeployment/ui-nretail-app--curlcatalog:8080/health
+#Expected:{"status":"healthy"}
 ```
 
-### Lambda Testing
+###LambdaTesting
 
-**Test 3: S3 Event Trigger**
+**Test3:S3EventTrigger**
 ```bash
-# Upload file
-aws s3 cp test-image.jpg s3://bedrock-assets-alt-soe-025-0275/products/
+#Uploadfile
+awss3cptest-image.jpgs3://bedrock-assets-alt-soe-025-0275/products/
 
-# Verify processing
-aws logs tail /aws/lambda/bedrock-asset-processor --since 1m
-# Expected: "Image received: products/test-image.jpg"
+#Verifyprocessing
+awslogstail/aws/lambda/bedrock-asset-processor--since1m
+#Expected:"Imagereceived:products/test-image.jpg"
 ```
 
-### Security Testing
+###SecurityTesting
 
-**Test 4: Developer Access**
+**Test4:DeveloperAccess**
 ```bash
-# Configure developer credentials
-aws configure --profile bedrock-dev
-# [Enter access key and secret from grading credentials]
+#Configuredevelopercredentials
+awsconfigure--profilebedrock-dev
+#[Enteraccesskeyandsecretfromgradingcredentials]
 
-# Test read access (should work)
-kubectl get pods -n retail-app
+#Testreadaccess(shouldwork)
+kubectlgetpods-nretail-app
 
-# Test write access (should fail)
-kubectl delete pod [POD-NAME] -n retail-app
-# Expected: Error from server (Forbidden)
+#Testwriteaccess(shouldfail)
+kubectldeletepod[POD-NAME]-nretail-app
+#Expected:Errorfromserver(Forbidden)
 ```
 
-### Observability Testing
+###ObservabilityTesting
 
-**Test 5: CloudWatch Logs**
+**Test5:CloudWatchLogs**
 ```bash
-# View control plane logs
-aws logs tail /aws/eks/project-bedrock-cluster/cluster --since 10m
+#Viewcontrolplanelogs
+awslogstail/aws/eks/project-bedrock-cluster/cluster--since10m
 
-# View application logs
-kubectl logs deployment/catalog -n retail-app --tail=50
+#Viewapplicationlogs
+kubectllogsdeployment/catalog-nretail-app--tail=50
 ```
 
 ---
 
-## 11. Cost Considerations
+##11.CostConsiderations
 
-### Monthly Cost Estimate
+###MonthlyCostEstimate
 
-| Service | Configuration | Est. Cost/Month |
+|Service|Configuration|Est.Cost/Month|
 |---------|--------------|-----------------|
-| EKS Cluster | 1 cluster | $72 |
-| EC2 (Nodes) | 3 x t3.large | ~$190 |
-| NAT Gateway | 2 gateways | ~$65 |
-| ALB | 1 load balancer | ~$23 |
-| RDS MySQL | db.t3.micro | ~$15 |
-| RDS PostgreSQL | db.t3.micro | ~$15 |
-| S3 | Storage + requests | ~$1 |
-| CloudWatch | Logs + metrics | ~$10 |
-| **Total** | | **~$391/month** |
+|EKSCluster|1cluster|$72|
+|EC2(Nodes)|3xt3.large|~$190|
+|NATGateway|2gateways|~$65|
+|ALB|1loadbalancer|~$23|
+|RDSMySQL|db.t3.micro|~$15|
+|RDSPostgreSQL|db.t3.micro|~$15|
+|S3|Storage+requests|~$1|
+|CloudWatch|Logs+metrics|~$10|
+|**Total**||**~$391/month**|
 
-**Cost Optimization Strategies**:
-1. Use Spot Instances for non-production workloads
-2. Enable cluster autoscaler to scale down during low traffic
-3. Use S3 lifecycle policies for old assets
-4. Optimize CloudWatch log retention
-5. Consider Reserved Instances for predictable workloads
-
----
-
-## 12. Security Best Practices Implemented
-
-### Network Security
-- ✅ Private subnets for EKS nodes
-- ✅ Security groups with least-privilege rules
-- ✅ NAT Gateways for controlled egress
-
-### IAM Security
-- ✅ Least-privilege IAM roles
-- ✅ IAM Roles for Service Accounts (IRSA)
-- ✅ No hardcoded credentials
-
-### Data Security
-- ✅ S3 bucket encryption (AES-256)
-- ✅ RDS encryption at rest
-- ✅ Secrets stored in AWS Secrets Manager
-- ✅ TLS for data in transit (optional HTTPS)
-
-### Kubernetes Security
-- ✅ RBAC enabled
-- ✅ Namespace isolation
-- ✅ Read-only developer access
-- ✅ Pod security standards
+**CostOptimizationStrategies**:
+1.UseSpotInstancesfornon-productionworkloads
+2.Enableclusterautoscalertoscaledownduringlowtraffic
+3.UseS3lifecyclepoliciesforoldassets
+4.OptimizeCloudWatchlogretention
+5.ConsiderReservedInstancesforpredictableworkloads
 
 ---
 
-## 13. Known Limitations and Future Improvements
+##12.SecurityBestPracticesImplemented
 
-### Current Limitations
-1. No multi-region deployment (single region: us-east-1)
-2. Basic monitoring (CloudWatch only, no Prometheus/Grafana)
-3. No disaster recovery automation
-4. Manual RDS password rotation
+###NetworkSecurity
+-✅PrivatesubnetsforEKSnodes
+-✅Securitygroupswithleast-privilegerules
+-✅NATGatewaysforcontrolledegress
 
-### Future Improvements
-1. **High Availability**: Multi-region EKS cluster with Global Accelerator
-2. **Advanced Monitoring**: Prometheus, Grafana, and Jaeger for distributed tracing
-3. **GitOps**: ArgoCD for application deployment
-4. **Security**: Implement OPA/Gatekeeper for policy enforcement
-5. **Scaling**: Cluster autoscaler and HPA for applications
-6. **Backup**: Velero for Kubernetes backup and restore
-7. **Cost**: FinOps dashboard for cost optimization
-8. **Secrets**: External Secrets Operator for secret management
+###IAMSecurity
+-✅Least-privilegeIAMroles
+-✅IAMRolesforServiceAccounts(IRSA)
+-✅Nohardcodedcredentials
 
----
+###DataSecurity
+-✅S3bucketencryption(AES-256)
+-✅RDSencryptionatrest
+-✅SecretsstoredinAWSSecretsManager
+-✅TLSfordataintransit(optionalHTTPS)
 
-## 14. Documentation Links
-
-### Repository Documentation
-- **Main README**: https://github.com/ififrank2013/bedrock-infra/blob/main/README.md
-- **Deployment Guide**: https://github.com/ififrank2013/bedrock-infra/blob/main/docs/DEPLOYMENT_GUIDE.md
-- **Terraform Modules**: https://github.com/ififrank2013/bedrock-infra/tree/main/terraform/modules
-
-### AWS Resources
-- **EKS Best Practices**: https://aws.github.io/aws-eks-best-practices/
-- **Retail Store Sample App**: https://github.com/aws-containers/retail-store-sample-app
-- **AWS Load Balancer Controller**: https://kubernetes-sigs.github.io/aws-load-balancer-controller/
+###KubernetesSecurity
+-✅RBACenabled
+-✅Namespaceisolation
+-✅Read-onlydeveloperaccess
+-✅Podsecuritystandards
 
 ---
 
-## 15. Acknowledgments
+##13.KnownLimitationsandFutureImprovements
 
-Special thanks to:
-- **AltSchool Africa** - For providing this comprehensive assessment
-- **Innocent Chukwuemeka** - For course instruction and guidance
-- **AWS** - For excellent documentation and sample applications
-- **Terraform** - For infrastructure as code tooling
-- **Kubernetes Community** - For container orchestration platform
+###CurrentLimitations
+1.Nomulti-regiondeployment(singleregion:us-east-1)
+2.Basicmonitoring(CloudWatchonly,noPrometheus/Grafana)
+3.Nodisasterrecoveryautomation
+4.ManualRDSpasswordrotation
 
----
-
-## 16. Contact Information
-
-**Student**: [Your Name]
-**Email**: [Your Email]
-**GitHub**: [@ififrank2013](https://github.com/ififrank2013)
-**LinkedIn**: [Your LinkedIn]
-
-**For Questions or Issues**:
-- Open an issue on GitHub: https://github.com/ififrank2013/bedrock-infra/issues
-- Email: [Your Email]
+###FutureImprovements
+1.**HighAvailability**:Multi-regionEKSclusterwithGlobalAccelerator
+2.**AdvancedMonitoring**:Prometheus,Grafana,andJaegerfordistributedtracing
+3.**GitOps**:ArgoCDforapplicationdeployment
+4.**Security**:ImplementOPA/Gatekeeperforpolicyenforcement
+5.**Scaling**:ClusterautoscalerandHPAforapplications
+6.**Backup**:VeleroforKubernetesbackupandrestore
+7.**Cost**:FinOpsdashboardforcostoptimization
+8.**Secrets**:ExternalSecretsOperatorforsecretmanagement
 
 ---
 
-## 17. Declaration
+##14.DocumentationLinks
 
-I hereby declare that:
-1. This work is my own original work
-2. All resources have been properly cited
-3. The infrastructure adheres to AWS best practices
-4. All naming conventions and standards have been followed
-5. The deployment has been tested and validated
+###RepositoryDocumentation
+-**MainREADME**:https://github.com/ififrank2013/bedrock-infra/blob/main/README.md
+-**DeploymentGuide**:https://github.com/ififrank2013/bedrock-infra/blob/main/docs/DEPLOYMENT_GUIDE.md
+-**TerraformModules**:https://github.com/ififrank2013/bedrock-infra/tree/main/terraform/modules
 
-**Signature**: ___________________
-**Date**: February 2026
-
----
-
-**END OF SUBMISSION DOCUMENT**
+###AWSResources
+-**EKSBestPractices**:https://aws.github.io/aws-eks-best-practices/
+-**RetailStoreSampleApp**:https://github.com/aws-containers/retail-store-sample-app
+-**AWSLoadBalancerController**:https://kubernetes-sigs.github.io/aws-load-balancer-controller/
 
 ---
 
-## Quick Access Links
+##15.Acknowledgments
 
-- 🔗 **GitHub Repository**: https://github.com/ififrank2013/bedrock-infra
-- 🌐 **Application URL**: [Your ALB URL]
-- 📊 **Architecture Diagram**: [Your diagram link]
-- 📝 **Grading JSON**: https://github.com/ififrank2013/bedrock-infra/blob/main/grading.json
-- 📚 **Documentation**: https://github.com/ififrank2013/bedrock-infra/blob/main/README.md
+Specialthanksto:
+-**AltSchoolAfrica**-Forprovidingthiscomprehensiveassessment
+-**InnocentChukwuemeka**-Forcourseinstructionandguidance
+-**AWS**-Forexcellentdocumentationandsampleapplications
+-**Terraform**-Forinfrastructureascodetooling
+-**KubernetesCommunity**-Forcontainerorchestrationplatform
 
-**Project Status**: ✅ Complete and Ready for Grading
+---
+
+##16.ContactInformation
+
+**Student**:[YourName]
+**Email**:[YourEmail]
+**GitHub**:[@ififrank2013](https://github.com/ififrank2013)
+**LinkedIn**:[YourLinkedIn]
+
+**ForQuestionsorIssues**:
+-OpenanissueonGitHub:https://github.com/ififrank2013/bedrock-infra/issues
+-Email:[YourEmail]
+
+---
+
+##17.Declaration
+
+Iherebydeclarethat:
+1.Thisworkismyownoriginalwork
+2.Allresourceshavebeenproperlycited
+3.TheinfrastructureadherestoAWSbestpractices
+4.Allnamingconventionsandstandardshavebeenfollowed
+5.Thedeploymenthasbeentestedandvalidated
+
+**Signature**:___________________
+**Date**:February2026
+
+---
+
+**ENDOFSUBMISSIONDOCUMENT**
+
+---
+
+##QuickAccessLinks
+
+-🔗**GitHubRepository**:https://github.com/ififrank2013/bedrock-infra
+-🌐**ApplicationURL**:[YourALBURL]
+-📊**ArchitectureDiagram**:[Yourdiagramlink]
+-📝**GradingJSON**:https://github.com/ififrank2013/bedrock-infra/blob/main/grading.json
+-📚**Documentation**:https://github.com/ififrank2013/bedrock-infra/blob/main/README.md
+
+**ProjectStatus**:✅CompleteandReadyforGrading

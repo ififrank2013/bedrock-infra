@@ -1,482 +1,483 @@
-# DEPLOYMENT STEPS - Execute These Commands in Order
+#DEPLOYMENTSTEPS-ExecuteTheseCommandsinOrder
 
-This guide walks you through deploying Project Bedrock from start to finish.
+ThisguidewalksyouthroughdeployingProjectBedrockfromstarttofinish.
 
-## IMPORTANT PREREQUISITES
+##IMPORTANTPREREQUISITES
 
-Before starting, ensure you have:
-1. AWS Account with appropriate IAM permissions
-2. AWS CLI v2.x installed and configured
-3. Terraform v1.5+ installed
-4. kubectl v1.28+ installed
-5. Helm v3.13+ installed
-6. Git installed
+Beforestarting,ensureyouhave:
+1.AWSAccountwithappropriateIAMpermissions
+2.AWSCLIv2.xinstalledandconfigured
+3.Terraformv1.5+installed
+4.kubectlv1.28+installed
+5.Helmv3.13+installed
+6.Gitinstalled
 
 ---
 
-## STEP 1: Initialize Git Repository
+##STEP1:InitializeGitRepository
 
 ```powershell
-# Navigate to bedrock-infra directory
-cd C:\Users\olivc\OneDrive\Documents\altschool-barakat-cohort\third-semester\capstone-project\bedrock-infra
+#Navigatetobedrock-infradirectory
+cdC:\Users\olivc\OneDrive\Documents\altschool-barakat-cohort\third-semester\capstone-project\bedrock-infra
 
-# Initialize git repository
-git init
+#Initializegitrepository
+gitinit
 
-# Add all files
-git add .
+#Addallfiles
+gitadd.
 
-# Make initial commit
-git commit -m "Initial commit: Complete Project Bedrock infrastructure"
+#Makeinitialcommit
+gitcommit-m"Initialcommit:CompleteProjectBedrockinfrastructure"
 ```
 
 ---
 
-## STEP 2: Create GitHub Repository
+##STEP2:CreateGitHubRepository
 
-1. Go to https://github.com/new
-2. Repository name: `bedrock-infra`
-3. Description: "Project Bedrock - InnovateMart EKS Infrastructure (AltSchool Capstone)"
-4. Make it **Public**
-5. Do NOT initialize with README (it is already included)
-6. Click "Create repository"
+1.Gotohttps://github.com/new
+2.Repositoryname:`bedrock-infra`
+3.Description:"ProjectBedrock-InnovateMartEKSInfrastructure(AltSchoolCapstone)"
+4.Makeit**Public**
+5.DoNOTinitializewithREADME(itisalreadyincluded)
+6.Click"Createrepository"
 
-Then push your code:
+Thenpushyourcode:
 
 ```powershell
-# Add remote
-git remote add origin https://github.com/ififrank2013/bedrock-infra.git
+#Addremote
+gitremoteaddoriginhttps://github.com/ififrank2013/bedrock-infra.git
 
-# Push to GitHub
-git branch -M main
-git push -u origin main
+#PushtoGitHub
+gitbranch-Mmain
+gitpush-uoriginmain
 ```
 
 ---
 
-## STEP 3: Setup AWS Backend
+##STEP3:SetupAWSBackend
 
-This creates the S3 bucket and DynamoDB table for Terraform state.
+ThiscreatestheS3bucketandDynamoDBtableforTerraformstate.
 
 ```powershell
-# Run the backend setup script
-cd scripts
+#Runthebackendsetupscript
+cdscripts
 .\setup-backend.ps1
 
-# Verify backend resources were created
-aws s3 ls | Select-String "bedrock-terraform-state"
-aws dynamodb list-tables | Select-String "bedrock-terraform-locks"
+#Verifybackendresourceswerecreated
+awss3ls|Select-String"bedrock-terraform-state"
+awsdynamodblist-tables|Select-String"bedrock-terraform-locks"
 ```
 
-**Expected Output:**
+**ExpectedOutput:**
 ```
-Backend setup complete!
+Backendsetupcomplete!
 ```
 
 ---
 
-## STEP 4: Deploy Infrastructure with Terraform
+##STEP4:DeployInfrastructurewithTerraform
 
 ```powershell
-# Navigate to terraform directory
-cd ..\terraform
+#Navigatetoterraformdirectory
+cd..\terraform
 
-# Initialize Terraform (downloads providers and modules)
-terraform init
+#InitializeTerraform(downloadsprovidersandmodules)
+terraforminit
 
-# Review what will be created (optional but recommended)
-terraform plan
+#Reviewwhatwillbecreated(optionalbutrecommended)
+terraformplan
 
-# Apply the infrastructure
-terraform apply
+#Applytheinfrastructure
+terraformapply
 ```
 
-When prompted, type `yes` and press Enter.
+Whenprompted,type`yes`andpressEnter.
 
-**This will take 15-20 minutes.**
+**Thiswilltake15-20minutes.**
 
-**Expected Output:**
+**ExpectedOutput:**
 ```
-Apply complete! Resources: 50+ added, 0 changed, 0 destroyed.
+Applycomplete!Resources:50+added,0changed,0destroyed.
 
 Outputs:
-cluster_endpoint = "https://xxxxx.gr7.us-east-1.eks.amazonaws.com"
-cluster_name = "project-bedrock-cluster"
-region = "us-east-1"
-vpc_id = "vpc-xxxxx"
-assets_bucket_name = "bedrock-assets-alt-soe-025-0275"
+cluster_endpoint="https://xxxxx.gr7.us-east-1.eks.amazonaws.com"
+cluster_name="project-bedrock-cluster"
+region="us-east-1"
+vpc_id="vpc-xxxxx"
+assets_bucket_name="bedrock-assets-alt-soe-025-0275"
 ...
 ```
 
 ---
 
-## STEP 5: Configure kubectl
+##STEP5:Configurekubectl
 
 ```powershell
-# Update kubeconfig to access the EKS cluster
-aws eks update-kubeconfig --name project-bedrock-cluster --region us-east-1
+#UpdatekubeconfigtoaccesstheEKScluster
+awseksupdate-kubeconfig--nameproject-bedrock-cluster--regionus-east-1
 
-# Verify cluster access
-kubectl cluster-info
+#Verifyclusteraccess
+kubectlcluster-info
 
-# Check nodes are ready
-kubectl get nodes
+#Checknodesareready
+kubectlgetnodes
 ```
 
-**Expected Output:**
+**ExpectedOutput:**
 ```
-NAME                                       STATUS   ROLES    AGE     VERSION
-ip-10-0-11-xxx.ec2.internal               Ready    <none>   5m      v1.31.0
-ip-10-0-12-xxx.ec2.internal               Ready    <none>   5m      v1.31.0
-ip-10-0-11-yyy.ec2.internal               Ready    <none>   5m      v1.31.0
+NAMESTATUSROLESAGEVERSION
+ip-10-0-11-xxx.ec2.internalReady<none>5mv1.31.0
+ip-10-0-12-xxx.ec2.internalReady<none>5mv1.31.0
+ip-10-0-11-yyy.ec2.internalReady<none>5mv1.31.0
 ```
 
 ---
 
-## STEP 6: Deploy Retail Application
+##STEP6:DeployRetailApplication
 
 ```powershell
-# Navigate back to scripts directory
-cd ..\scripts
+#Navigatebacktoscriptsdirectory
+cd..\scripts
 
-# Run the deployment script
+#Runthedeploymentscript
 .\deploy-app.ps1
 ```
 
-**This will take 5-10 minutes.**
+**Thiswilltake5-10minutes.**
 
-**Expected Output:**
+**ExpectedOutput:**
 ```
-Deployment complete!
-Application URL: http://k8s-retailap-xxxxx.us-east-1.elb.amazonaws.com
-```
-
----
-
-## STEP 7: Verify Deployment
-
-### Check All Pods are Running
-
-```powershell
-kubectl get pods -n retail-app
-```
-
-**Expected:** All pods should show `STATUS: Running` and `READY: 1/1`
-
-### Get Application URL
-
-```powershell
-kubectl get ingress -n retail-app
-```
-
-Look for the `ADDRESS` column - that's your ALB URL.
-
-### Test Application
-
-```powershell
-# Get the URL
-$ALB_URL = kubectl get ingress retail-app-ingress -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-
-# Test with curl
-curl http://$ALB_URL
-
-# Or open in browser
-Start-Process "http://$ALB_URL"
+Deploymentcomplete!
+ApplicationURL:http://k8s-retailap-xxxxx.us-east-1.elb.amazonaws.com
 ```
 
 ---
 
-## STEP 8: Test Lambda Function
+##STEP7:VerifyDeployment
+
+###CheckAllPodsareRunning
 
 ```powershell
-# Create a test image
-"Test product image" | Out-File -FilePath test-image.jpg -Encoding ASCII
-
-# Upload to S3
-aws s3 cp test-image.jpg s3://bedrock-assets-alt-soe-025-0275/products/
-
-# Check Lambda logs (wait 10 seconds first)
-Start-Sleep -Seconds 10
-aws logs tail /aws/lambda/bedrock-asset-processor --since 1m
+kubectlgetpods-nretail-app
 ```
 
-**Expected Output in logs:**
+**Expected:**Allpodsshouldshow`STATUS:Running`and`READY:1/1`
+
+###GetApplicationURL
+
+```powershell
+kubectlgetingress-nretail-app
 ```
-Image received: products/test-image.jpg
+
+Lookforthe`ADDRESS`column-that'syourALBURL.
+
+###TestApplication
+
+```powershell
+#GettheURL
+$ALB_URL=kubectlgetingressretail-app-ingress-nretail-app-ojsonpath='{.status.loadBalancer.ingress[0].hostname}'
+
+#Testwithcurl
+curlhttp://$ALB_URL
+
+#Oropeninbrowser
+Start-Process"http://$ALB_URL"
 ```
 
 ---
 
-## STEP 9: Test Developer Access
+##STEP8:TestLambdaFunction
 
 ```powershell
-# Get developer credentials
-cd ..\terraform
-$ACCESS_KEY = terraform output -raw developer_access_key_id
-$SECRET_KEY = terraform output -raw developer_secret_access_key
+#Createatestimage
+"Testproductimage"|Out-File-FilePathtest-image.jpg-EncodingASCII
 
-# Display credentials (save these for submission)
-Write-Host "Developer Access Key ID: $ACCESS_KEY"
-Write-Host "Developer Secret Access Key: $SECRET_KEY"
+#UploadtoS3
+awss3cptest-image.jpgs3://bedrock-assets-alt-soe-025-0275/products/
 
-# Configure a separate AWS profile for the developer
-aws configure --profile bedrock-dev
-# When prompted:
-#   AWS Access Key ID: [paste $ACCESS_KEY]
-#   AWS Secret Access Key: [paste $SECRET_KEY]
-#   Default region: us-east-1
-#   Default output format: json
-
-# Test AWS read access (should work)
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev
-
-# Update kubeconfig with developer profile
-aws eks update-kubeconfig --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev
-
-# Test Kubernetes read access (should work)
-kubectl get pods -n retail-app
-kubectl get nodes
-
-# Test write access (should fail with Forbidden error)
-$POD = kubectl get pods -n retail-app -o name | Select-Object -First 1
-kubectl delete $POD
+#CheckLambdalogs(wait10secondsfirst)
+Start-Sleep-Seconds10
+awslogstail/aws/lambda/bedrock-asset-processor--since1m
 ```
 
-**Expected:** The delete command should fail with "Forbidden" error.
-
----
-
-## STEP 10: Generate Grading JSON
-
-```powershell
-# Generate the grading.json file
-cd ..\terraform
-terraform output -json | Out-File -FilePath ..\grading.json -Encoding UTF8
-
-# View the file
-Get-Content ..\grading.json
-
-# Add to git
-cd ..
-git add grading.json
-git commit -m "Add grading.json with terraform outputs"
-git push
+**ExpectedOutputinlogs:**
+```
+Imagereceived:products/test-image.jpg
 ```
 
 ---
 
-## STEP 11: Setup GitHub Actions Secrets
+##STEP9:TestDeveloperAccess
 
-1. Go to your repository on GitHub: https://github.com/ififrank2013/bedrock-infra
-2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Click **New repository secret**
-4. Add two secrets:
+```powershell
+#Getdevelopercredentials
+cd..\terraform
+$ACCESS_KEY=terraformoutput-rawdeveloper_access_key_id
+$SECRET_KEY=terraformoutput-rawdeveloper_secret_access_key
 
-**Secret 1:**
-- Name: `AWS_ACCESS_KEY_ID`
-- Value: Your AWS access key ID
+#Displaycredentials(savetheseforsubmission)
+Write-Host"DeveloperAccessKeyID:$ACCESS_KEY"
+Write-Host"DeveloperSecretAccessKey:$SECRET_KEY"
 
-**Secret 2:**
-- Name: `AWS_SECRET_ACCESS_KEY`
-- Value: Your AWS secret access key
+#ConfigureaseparateAWSprofileforthedeveloper
+awsconfigure--profilebedrock-dev
+#Whenprompted:
+#AWSAccessKeyID:[paste$ACCESS_KEY]
+#AWSSecretAccessKey:[paste$SECRET_KEY]
+#Defaultregion:us-east-1
+#Defaultoutputformat:json
+
+#TestAWSreadaccess(shouldwork)
+awseksdescribe-cluster--nameproject-bedrock-cluster--regionus-east-1--profilebedrock-dev
+
+#Updatekubeconfigwithdeveloperprofile
+awseksupdate-kubeconfig--nameproject-bedrock-cluster--regionus-east-1--profilebedrock-dev
+
+#TestKubernetesreadaccess(shouldwork)
+kubectlgetpods-nretail-app
+kubectlgetnodes
+
+#Testwriteaccess(shouldfailwithForbiddenerror)
+$POD=kubectlgetpods-nretail-app-oname|Select-Object-First1
+kubectldelete$POD
+```
+
+**Expected:**Thedeletecommandshouldfailwith"Forbidden"error.
 
 ---
 
-## STEP 12: Test CI/CD Pipeline
+##STEP10:GenerateGradingJSON
 
 ```powershell
-# Create a test branch
-git checkout -b test-cicd
+#Generatethegrading.jsonfile
+cd..\terraform
+terraformoutput-json|Out-File-FilePath..\grading.json-EncodingUTF8
 
-# Make a small change
-"# Test change" | Add-Content README.md
+#Viewthefile
+Get-Content..\grading.json
 
-# Commit and push
-git add README.md
-git commit -m "Test CI/CD pipeline"
-git push origin test-cicd
+#Addtogit
+cd..
+gitaddgrading.json
+gitcommit-m"Addgrading.jsonwithterraformoutputs"
+gitpush
+```
+
+---
+
+##STEP11:SetupGitHubActionsSecrets
+
+1.GotoyourrepositoryonGitHub:https://github.com/ififrank2013/bedrock-infra
+2.Click**Settings**→**Secretsandvariables**→**Actions**
+3.Click**Newrepositorysecret**
+4.Addtwosecrets:
+
+**Secret1:**
+-Name:`AWS_ACCESS_KEY_ID`
+-Value:YourAWSaccesskeyID
+
+**Secret2:**
+-Name:`AWS_SECRET_ACCESS_KEY`
+-Value:YourAWSsecretaccesskey
+
+---
+
+##STEP12:TestCI/CDPipeline
+
+```powershell
+#Createatestbranch
+gitcheckout-btest-cicd
+
+#Makeasmallchange
+"#Testchange"|Add-ContentREADME.md
+
+#Commitandpush
+gitaddREADME.md
+gitcommit-m"TestCI/CDpipeline"
+gitpushorigintest-cicd
 ```
 
 Then:
-1. Go to GitHub and create a Pull Request
-2. Watch the GitHub Actions workflow run `terraform plan`
-3. Review the plan in the PR comments
-4. Merge the PR to trigger `terraform apply`
+1.GotoGitHubandcreateaPullRequest
+2.WatchtheGitHubActionsworkflowrun`terraformplan`
+3.ReviewtheplaninthePRcomments
+4.MergethePRtotrigger`terraformapply`
 
 ---
 
-## STEP 13: Create Architecture Diagram
+##STEP13:CreateArchitectureDiagram
 
-Use one of these tools to create your diagram:
-- **Draw.io**: https://app.diagrams.net/
-- **Lucidchart**: https://www.lucidchart.com/
-- **Excalidraw**: https://excalidraw.com/
+Useoneofthesetoolstocreateyourdiagram:
+-**Draw.io**:https://app.diagrams.net/
+-**Lucidchart**:https://www.lucidchart.com/
+-**Excalidraw**:https://excalidraw.com/
 
-Reference the ASCII diagram in README.md for structure.
+ReferencetheASCIIdiagraminREADME.mdforstructure.
 
-Save the diagram as `architecture.png` and upload to your repository:
+Savethediagramas`architecture.png`anduploadtoyourrepository:
 
 ```powershell
-# After creating the diagram
-cd docs
-# Place your architecture.png file here
+#Aftercreatingthediagram
+cddocs
+#Placeyourarchitecture.pngfilehere
 
-# Add to git
-git add architecture.png
-git commit -m "Add architecture diagram"
-git push
+#Addtogit
+gitaddarchitecture.png
+gitcommit-m"Addarchitecturediagram"
+gitpush
 ```
 
 ---
 
-## STEP 14: Prepare Submission Document
+##STEP14:PrepareSubmissionDocument
 
-1. Open `/docs/SUBMISSION_TEMPLATE.md`
-2. Fill in all the required information:
-   - Your full name
-   - Your email
-   - Actual ALB URL from Step 7
-   - Developer credentials from Step 9
-   - Link to architecture diagram
+1.Open`/docs/SUBMISSION_TEMPLATE.md`
+2.Fillinalltherequiredinformation:
+-Yourfullname
+-Youremail
+-ActualALBURLfromStep7
+-DevelopercredentialsfromStep9
+-Linktoarchitecturediagram
 
-3. Export as PDF or share as Google Doc
+3.ExportasPDForshareasGoogleDoc
 
-### Create Google Doc:
-1. Copy contents of SUBMISSION_TEMPLATE.md
-2. Go to Google Docs: https://docs.google.com/document/
-3. Paste and format the content
-4. Get shareable link with "Viewer" access
-5. Share with Innocent Chukwuemeka
+###CreateGoogleDoc:
+1.CopycontentsofSUBMISSION_TEMPLATE.md
+2.GotoGoogleDocs:https://docs.google.com/document/
+3.Pasteandformatthecontent
+4.Getshareablelinkwith"Viewer"access
+5.SharewithInnocentChukwuemeka
 
 ---
 
-## STEP 15: Final Verification Checklist
+##STEP15:FinalVerificationChecklist
 
-Run these commands to verify everything:
+Runthesecommandstoverifyeverything:
 
 ```powershell
-# 1. EKS Cluster
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --query 'cluster.status'
-# Expected: "ACTIVE"
+#1.EKSCluster
+awseksdescribe-cluster--nameproject-bedrock-cluster--regionus-east-1--query'cluster.status'
+#Expected:"ACTIVE"
 
-# 2. All Pods Running
-kubectl get pods -n retail-app
-# Expected: All pods STATUS: Running
+#2.AllPodsRunning
+kubectlgetpods-nretail-app
+#Expected:AllpodsSTATUS:Running
 
-# 3. Application Accessible
-$ALB_URL = kubectl get ingress retail-app-ingress -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-curl -I "http://$ALB_URL"
-# Expected: HTTP/1.1 200 OK
+#3.ApplicationAccessible
+$ALB_URL=kubectlgetingressretail-app-ingress-nretail-app-ojsonpath='{.status.loadBalancer.ingress[0].hostname}'
+curl-I"http://$ALB_URL"
+#Expected:HTTP/1.1200OK
 
-# 4. Lambda Function
-aws lambda get-function --function-name bedrock-asset-processor --query 'Configuration.FunctionName'
-# Expected: "bedrock-asset-processor"
+#4.LambdaFunction
+awslambdaget-function--function-namebedrock-asset-processor--query'Configuration.FunctionName'
+#Expected:"bedrock-asset-processor"
 
-# 5. S3 Bucket
-aws s3 ls s3://bedrock-assets-alt-soe-025-0275
-# Expected: List of objects (including your test file)
+#5.S3Bucket
+awss3lss3://bedrock-assets-alt-soe-025-0275
+#Expected:Listofobjects(includingyourtestfile)
 
-# 6. CloudWatch Logs
-aws logs describe-log-groups --log-group-name-prefix /aws/eks/project-bedrock-cluster
-# Expected: List of log groups
+#6.CloudWatchLogs
+awslogsdescribe-log-groups--log-group-name-prefix/aws/eks/project-bedrock-cluster
+#Expected:Listofloggroups
 
-# 7. RDS Instances
-aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]'
-# Expected: Two instances (mysql and postgres) with status "available"
+#7.RDSInstances
+awsrdsdescribe-db-instances--query'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]'
+#Expected:Twoinstances(mysqlandpostgres)withstatus"available"
 
-# 8. VPC
-aws ec2 describe-vpcs --filters "Name=tag:Name,Values=project-bedrock-vpc" --query 'Vpcs[0].VpcId'
-# Expected: vpc-xxxxx
+#8.VPC
+awsec2describe-vpcs--filters"Name=tag:Name,Values=project-bedrock-vpc"--query'Vpcs[0].VpcId'
+#Expected:vpc-xxxxx
 
-# 9. Terraform State
-aws s3 ls s3://bedrock-terraform-state-alt-soe-025-0275/bedrock/
-# Expected: terraform.tfstate file
+#9.TerraformState
+awss3lss3://bedrock-terraform-state-alt-soe-025-0275/bedrock/
+#Expected:terraform.tfstatefile
 
-# 10. GitHub Repository
-# Visit: https://github.com/ififrank2013/bedrock-infra
-# Verify all files are pushed
+#10.GitHubRepository
+#Visit:https://github.com/ififrank2013/bedrock-infra
+#Verifyallfilesarepushed
 ```
 
 ---
 
-## SUBMISSION CHECKLIST
+##SUBMISSIONCHECKLIST
 
-Before submitting, ensure:
+Beforesubmitting,ensure:
 
-- [ ] GitHub repository is public or access granted to instructor
-- [ ] All code is pushed to main branch
-- [ ] grading.json is in repository root
-- [ ] README.md is complete and accurate
-- [ ] Architecture diagram is created and added
-- [ ] Application is accessible via ALB URL
-- [ ] All pods are running in retail-app namespace
-- [ ] Lambda function is working (test with S3 upload)
-- [ ] Developer access credentials are documented
-- [ ] CloudWatch logs are enabled and accessible
-- [ ] RDS instances are running (if enabled)
-- [ ] ALB is provisioned and routing traffic
-- [ ] CI/CD pipeline is configured in GitHub Actions
-- [ ] Submission document is prepared (Google Doc or PDF)
-- [ ] All naming conventions are correct
-- [ ] All resources are tagged properly
-
----
-
-## 🎉 CONGRATULATIONS!
-
-You have successfully:
-- Deployed a production-grade EKS cluster
-- Configured VPC with public/private subnets
-- Implemented IAM and RBAC security
-- Set up CloudWatch observability
-- Created serverless event processing
-- Deployed a microservices application
-- Implemented CI/CD pipeline
-- Added RDS managed databases (bonus)
-- Configured ALB with Ingress (bonus)
-
-Your Project Bedrock infrastructure is complete and ready for grading.
+-[]GitHubrepositoryispublicoraccessgrantedtoinstructor
+-[]Allcodeispushedtomainbranch
+-[]grading.jsonisinrepositoryroot
+-[]README.mdiscompleteandaccurate
+-[]Architecturediagramiscreatedandadded
+-[]ApplicationisaccessibleviaALBURL
+-[]Allpodsarerunninginretail-appnamespace
+-[]Lambdafunctionisworking(testwithS3upload)
+-[]Developeraccesscredentialsaredocumented
+-[]CloudWatchlogsareenabledandaccessible
+-[]RDSinstancesarerunning(ifenabled)
+-[]ALBisprovisionedandroutingtraffic
+-[]CI/CDpipelineisconfiguredinGitHubActions
+-[]Submissiondocumentisprepared(GoogleDocorPDF)
+-[]Allnamingconventionsarecorrect
+-[]Allresourcesaretaggedproperly
 
 ---
 
-## 🆘 TROUBLESHOOTING
+##🎉CONGRATULATIONS!
 
-If something goes wrong, check:
+Youhavesuccessfully:
+-Deployedaproduction-gradeEKScluster
+-ConfiguredVPCwithpublic/privatesubnets
+-ImplementedIAMandRBACsecurity
+-SetupCloudWatchobservability
+-Createdserverlesseventprocessing
+-Deployedamicroservicesapplication
+-ImplementedCI/CDpipeline
+-AddedRDSmanageddatabases(bonus)
+-ConfiguredALBwithIngress(bonus)
 
-1. **AWS Credentials**: `aws sts get-caller-identity`
-2. **Terraform State**: `cd terraform && terraform show`
-3. **Cluster Status**: `kubectl cluster-info`
-4. **Pod Logs**: `kubectl logs <pod-name> -n retail-app`
-5. **Events**: `kubectl get events -n retail-app --sort-by='.lastTimestamp'`
-
-For detailed troubleshooting, see `/docs/DEPLOYMENT_GUIDE.md`.
+YourProjectBedrockinfrastructureiscompleteandreadyforgrading.
 
 ---
 
-## 🧹 CLEANUP (ONLY AFTER GRADING)
+##🆘TROUBLESHOOTING
 
-**WARNING: This will delete everything!**
+Ifsomethinggoeswrong,check:
+
+1.**AWSCredentials**:`awsstsget-caller-identity`
+2.**TerraformState**:`cdterraform&&terraformshow`
+3.**ClusterStatus**:`kubectlcluster-info`
+4.**PodLogs**:`kubectllogs<pod-name>-nretail-app`
+5.**Events**:`kubectlgetevents-nretail-app--sort-by='.lastTimestamp'`
+
+Fordetailedtroubleshooting,see`/docs/DEPLOYMENT_GUIDE.md`.
+
+---
+
+##🧹CLEANUP(ONLYAFTERGRADING)
+
+**WARNING:Thiswilldeleteeverything!**
 
 ```powershell
-# Delete application
-helm uninstall retail-app -n retail-app
-kubectl delete namespace retail-app
+#Deleteapplication
+helmuninstallretail-app-nretail-app
+kubectldeletenamespaceretail-app
 
-# Wait for LoadBalancers to be deleted
-Start-Sleep -Seconds 60
+#WaitforLoadBalancerstobedeleted
+Start-Sleep-Seconds60
 
-# Destroy infrastructure
-cd terraform
-terraform destroy
+#Destroyinfrastructure
+cdterraform
+terraformdestroy
 
-# Type 'yes' when prompted
+#Type'yes'whenprompted
 
-# Delete backend (optional)
-aws s3 rm s3://bedrock-terraform-state-alt-soe-025-0275 --recursive
-aws s3 rb s3://bedrock-terraform-state-alt-soe-025-0275
-aws dynamodb delete-table --table-name bedrock-terraform-locks
+#Deletebackend(optional)
+awss3rms3://bedrock-terraform-state-alt-soe-025-0275--recursive
+awss3rbs3://bedrock-terraform-state-alt-soe-025-0275
+awsdynamodbdelete-table--table-namebedrock-terraform-locks
 ```
 
 ---
 
-**Good luck with your submission!**
+**Goodluckwithyoursubmission!**
+

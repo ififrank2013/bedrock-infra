@@ -1,770 +1,770 @@
-# Project Bedrock - Detailed Deployment Guide
+#ProjectBedrock-DetailedDeploymentGuide
 
-This comprehensive guide will walk you through deploying the complete Project Bedrock infrastructure from start to finish.
+ThiscomprehensiveguidewillwalkyouthroughdeployingthecompleteProjectBedrockinfrastructurefromstarttofinish.
 
-## Table of Contents
+##TableofContents
 
-1. [Prerequisites](#prerequisites)
-2. [Initial Setup](#initial-setup)
-3. [Backend Configuration](#backend-configuration)
-4. [Infrastructure Deployment](#infrastructure-deployment)
-5. [Application Deployment](#application-deployment)
-6. [Verification and Testing](#verification-and-testing)
-7. [Optional: RDS Integration](#optional-rds-integration)
-8. [Optional: HTTPS Configuration](#optional-https-configuration)
-9. [Troubleshooting](#troubleshooting)
+1.[Prerequisites](#prerequisites)
+2.[InitialSetup](#initial-setup)
+3.[BackendConfiguration](#backend-configuration)
+4.[InfrastructureDeployment](#infrastructure-deployment)
+5.[ApplicationDeployment](#application-deployment)
+6.[VerificationandTesting](#verification-and-testing)
+7.[Optional:RDSIntegration](#optional-rds-integration)
+8.[Optional:HTTPSConfiguration](#optional-https-configuration)
+9.[Troubleshooting](#troubleshooting)
 
-## Prerequisites
+##Prerequisites
 
-### 1. Install Required Tools (If not present)
+###1.InstallRequiredTools(Ifnotpresent)
 
-#### AWS CLI
+####AWSCLI
 
 **macOS:**
 ```bash
-curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-sudo installer -pkg AWSCLIV2.pkg -target /
+curl"https://awscli.amazonaws.com/AWSCLIV2.pkg"-o"AWSCLIV2.pkg"
+sudoinstaller-pkgAWSCLIV2.pkg-target/
 ```
 
 **Linux:**
 ```bash
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+curl"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"-o"awscliv2.zip"
+unzipawscliv2.zip
+sudo./aws/install
 ```
 
 **Windows:**
-Download and run: https://awscli.amazonaws.com/AWSCLIV2.msi
+Downloadandrun:https://awscli.amazonaws.com/AWSCLIV2.msi
 
 **Verify:**
 ```bash
-aws --version  # Should show v2.x
+aws--version#Shouldshowv2.x
 ```
 
-#### Terraform
+####Terraform
 
 **macOS:**
 ```bash
-brew tap hashicorp/tap
-brew install hashicorp/terraform
+brewtaphashicorp/tap
+brewinstallhashicorp/terraform
 ```
 
 **Linux:**
 ```bash
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
+wget-O-https://apt.releases.hashicorp.com/gpg|sudogpg--dearmor-o/usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo"deb[signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg]https://apt.releases.hashicorp.com$(lsb_release-cs)main"|sudotee/etc/apt/sources.list.d/hashicorp.list
+sudoaptupdate&&sudoaptinstallterraform
 ```
 
 **Windows:**
-Download from: https://www.terraform.io/downloads
+Downloadfrom:https://www.terraform.io/downloads
 
 **Verify:**
 ```bash
-terraform version  # Should show v1.5+
+terraformversion#Shouldshowv1.5+
 ```
 
-#### kubectl
+####kubectl
 
 **macOS:**
 ```bash
-brew install kubectl
+brewinstallkubectl
 ```
 
 **Linux:**
 ```bash
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-```
-
-**Windows:**
-```powershell
-curl.exe -LO "https://dl.k8s.io/release/v1.28.0/bin/windows/amd64/kubectl.exe"
-```
-
-**Verify:**
-```bash
-kubectl version --client  # Should show v1.28+
-```
-
-#### Helm
-
-**macOS:**
-```bash
-brew install helm
-```
-
-**Linux:**
-```bash
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+curl-LO"https://dl.k8s.io/release/$(curl-L-shttps://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudoinstall-oroot-groot-m0755kubectl/usr/local/bin/kubectl
 ```
 
 **Windows:**
 ```powershell
-choco install kubernetes-helm
+curl.exe-LO"https://dl.k8s.io/release/v1.28.0/bin/windows/amd64/kubectl.exe"
 ```
 
 **Verify:**
 ```bash
-helm version  # Should show v3.13+
+kubectlversion--client#Shouldshowv1.28+
 ```
-##### Now, you are set. Let us now configure AWS credentials
 
-### 2. Configure AWS Credentials
+####Helm
+
+**macOS:**
+```bash
+brewinstallhelm
+```
+
+**Linux:**
+```bash
+curlhttps://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3|bash
+```
+
+**Windows:**
+```powershell
+chocoinstallkubernetes-helm
+```
+
+**Verify:**
+```bash
+helmversion#Shouldshowv3.13+
+```
+#####Now,youareset.LetusnowconfigureAWScredentials
+
+###2.ConfigureAWSCredentials
 
 ```bash
-aws configure
+awsconfigure
 ```
 
 Provide:
-- **AWS Access Key ID**: Your access key
-- **AWS Secret Access Key**: Your secret key
-- **Default region name**: `us-east-1`
-- **Default output format**: `json`
+-**AWSAccessKeyID**:Youraccesskey
+-**AWSSecretAccessKey**:Yoursecretkey
+-**Defaultregionname**:`us-east-1`
+-**Defaultoutputformat**:`json`
 
 **Verify:**
 ```bash
-aws sts get-caller-identity
+awsstsget-caller-identity
 ```
 
-### 3. Verify IAM Permissions
+###3.VerifyIAMPermissions
 
-Ensure your IAM user/role has permissions for:
-- EC2 (VPC, Subnets, NAT Gateways)
-- EKS (Clusters, Node Groups)
-- IAM (Roles, Policies, Users)
-- S3 (Buckets, Objects)
-- Lambda (Functions)
-- RDS (Instances, Subnet Groups)
-- CloudWatch (Log Groups)
-- Elastic Load Balancing (ALB, Target Groups)
+EnsureyourIAMuser/rolehaspermissionsfor:
+-EC2(VPC,Subnets,NATGateways)
+-EKS(Clusters,NodeGroups)
+-IAM(Roles,Policies,Users)
+-S3(Buckets,Objects)
+-Lambda(Functions)
+-RDS(Instances,SubnetGroups)
+-CloudWatch(LogGroups)
+-ElasticLoadBalancing(ALB,TargetGroups)
 
-## Initial Setup
+##InitialSetup
 
-### 1. Clone the Repository
+###1.ClonetheRepository
 
 ```bash
-git clone https://github.com/ififrank2013/bedrock-infra.git
-cd bedrock-infra
+gitclonehttps://github.com/ififrank2013/bedrock-infra.git
+cdbedrock-infra
 ```
 
-### 2. Review Configuration
+###2.ReviewConfiguration
 
-Edit `terraform/variables.tf` if you want to customize:
+Edit`terraform/variables.tf`ifyouwanttocustomize:
 
 ```hcl
-variable "aws_region" {
-  default     = "us-east-1"
+variable"aws_region"{
+default="us-east-1"
 }
 
-variable "cluster_version" {
-  default     = "1.31"        # EKS version
+variable"cluster_version"{
+default="1.31"#EKSversion
 }
 
-variable "node_instance_types" {
-  default     = ["t3.large"] 
+variable"node_instance_types"{
+default=["t3.large"]
 }
 
-variable "enable_rds" {
-  default     = true          # RDS settings
+variable"enable_rds"{
+default=true#RDSsettings
 }
 
-variable "enable_alb_ingress" {
-  default     = true          # Enable ALB
+variable"enable_alb_ingress"{
+default=true#EnableALB
 }
 ```
 
-**Important**: Do NOT change resource names:
-- Cluster name: `project-bedrock-cluster`
-- VPC name: `project-bedrock-vpc`
-- Namespace: `retail-app`
-- Developer user: `bedrock-dev-view`
+**Important**:DoNOTchangeresourcenames:
+-Clustername:`project-bedrock-cluster`
+-VPCname:`project-bedrock-vpc`
+-Namespace:`retail-app`
+-Developeruser:`bedrock-dev-view`
 
-## Backend Configuration
+##BackendConfiguration
 
-### 1. Run Backend Setup Script
+###1.RunBackendSetupScript
 
-**On Linux/macOS:**
+**OnLinux/macOS:**
 ```bash
-cd scripts
-chmod +x setup-backend.sh
+cdscripts
+chmod+xsetup-backend.sh
 ./setup-backend.sh
-cd ..
+cd..
 ```
 
-**On Windows (PowerShell):**
+**OnWindows(PowerShell):**
 ```powershell
-cd scripts
+cdscripts
 .\setup-backend.ps1
-cd ..
+cd..
 ```
 
-This script creates:
-- S3 bucket: `bedrock-terraform-state-alt-soe-025-0275`
-- DynamoDB table: `bedrock-terraform-locks`
+Thisscriptcreates:
+-S3bucket:`bedrock-terraform-state-alt-soe-025-0275`
+-DynamoDBtable:`bedrock-terraform-locks`
 
-### 2. Verify Backend Resources
+###2.VerifyBackendResources
 
 ```bash
-# Check S3 bucket
-aws s3 ls | grep bedrock-terraform-state
+#CheckS3bucket
+awss3ls|grepbedrock-terraform-state
 
-# Check DynamoDB table
-aws dynamodb describe-table --table-name bedrock-terraform-locks
+#CheckDynamoDBtable
+awsdynamodbdescribe-table--table-namebedrock-terraform-locks
 ```
 
-## Infrastructure Deployment
+##InfrastructureDeployment
 
-### 1. Initialize Terraform
+###1.InitializeTerraform
 
 ```bash
-cd terraform
-terraform init
+cdterraform
+terraforminit
 ```
 
-Expected output:
+Expectedoutput:
 ```
-Initializing modules...
-Initializing the backend...
-Successfully configured the backend "s3"!
-Terraform has been successfully initialized!
+Initializingmodules...
+Initializingthebackend...
+Successfullyconfiguredthebackend"s3"!
+Terraformhasbeensuccessfullyinitialized!
 ```
 
-### 2. Review the Plan
+###2.ReviewthePlan
 
 ```bash
-terraform plan
+terraformplan
 ```
 
-Review the resources to be created:
-- VPC and subnets
-- EKS cluster and node group
-- IAM roles and users
-- S3 bucket and Lambda function
-- CloudWatch log groups
-- RDS instances (if enabled)
-- ALB controller (if enabled)
+Reviewtheresourcestobecreated:
+-VPCandsubnets
+-EKSclusterandnodegroup
+-IAMrolesandusers
+-S3bucketandLambdafunction
+-CloudWatchloggroups
+-RDSinstances(ifenabled)
+-ALBcontroller(ifenabled)
 
-### 3. Apply Infrastructure
+###3.ApplyInfrastructure
 
 ```bash
-terraform apply
+terraformapply
 ```
 
-Type `yes` when prompted.
+Type`yes`whenprompted.
 
-**Expected duration**: 15-20 minutes
+**Expectedduration**:15-20minutes
 
-**Progress indicators:**
-- VPC created (~2 min)
-- EKS cluster created (~10 min)
-- Node group created (~5 min)
-- Add-ons installed (~2 min)
+**Progressindicators:**
+-VPCcreated(~2min)
+-EKSclustercreated(~10min)
+-Nodegroupcreated(~5min)
+-Add-onsinstalled(~2min)
 
-### 4. Verify Deployment
+###4.VerifyDeployment
 
 ```bash
-# Check EKS cluster
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1
+#CheckEKScluster
+awseksdescribe-cluster--nameproject-bedrock-cluster--regionus-east-1
 
-# Get outputs
-terraform output
+#Getoutputs
+terraformoutput
 ```
 
-### 5. Configure kubectl
+###5.Configurekubectl
 
 ```bash
-aws eks update-kubeconfig --name project-bedrock-cluster --region us-east-1
+awseksupdate-kubeconfig--nameproject-bedrock-cluster--regionus-east-1
 
-# Verify connection
-kubectl get nodes
-kubectl get namespaces
+#Verifyconnection
+kubectlgetnodes
+kubectlgetnamespaces
 ```
 
-Expected output:
+Expectedoutput:
 ```
-NAME                                       STATUS   ROLES    AGE   VERSION
-ip-10-0-11-xxx.ec2.internal               Ready    <none>   5m    v1.31.0
-ip-10-0-12-xxx.ec2.internal               Ready    <none>   5m    v1.31.0
+NAMESTATUSROLESAGEVERSION
+ip-10-0-11-xxx.ec2.internalReady<none>5mv1.31.0
+ip-10-0-12-xxx.ec2.internalReady<none>5mv1.31.0
 ```
 
-## Application Deployment
+##ApplicationDeployment
 
-### Option A: Automated Deployment (Recommended)
+###OptionA:AutomatedDeployment(Recommended)
 
-**On Linux/macOS:**
+**OnLinux/macOS:**
 ```bash
-cd ../scripts
-chmod +x deploy-app.sh
+cd../scripts
+chmod+xdeploy-app.sh
 ./deploy-app.sh
 ```
 
-**On Windows (PowerShell):**
+**OnWindows(PowerShell):**
 ```powershell
-cd ..\scripts
+cd..\scripts
 .\deploy-app.ps1
 ```
 
-### Option B: Manual Deployment
+###OptionB:ManualDeployment
 
-#### 1. Add Helm Repository
-
-```bash
-helm repo add retail-app https://aws.github.io/retail-store-sample-app
-helm repo update
-```
-
-#### 2. Create Namespace
+####1.AddHelmRepository
 
 ```bash
-kubectl create namespace retail-app
+helmrepoaddretail-apphttps://aws.github.io/retail-store-sample-app
+helmrepoupdate
 ```
 
-#### 3. Deploy Application
-
-**Without RDS (in-cluster databases):**
-```bash
-helm install retail-app retail-app/retail-app \
-  --namespace retail-app \
-  --values ../k8s/retail-app-values.yaml \
-  --wait \
-  --timeout 10m
-```
-
-**With RDS:**
-```bash
-# First, get RDS endpoints from Terraform
-cd ../terraform
-MYSQL_ENDPOINT=$(terraform output -raw rds_mysql_endpoint)
-POSTGRES_ENDPOINT=$(terraform output -raw rds_postgres_endpoint)
-
-# Get RDS passwords from Secrets Manager
-MYSQL_PASSWORD=$(aws secretsmanager get-secret-value --secret-id bedrock/rds/mysql-credentials --query SecretString --output text | jq -r .password)
-POSTGRES_PASSWORD=$(aws secretsmanager get-secret-value --secret-id bedrock/rds/postgres-credentials --query SecretString --output text | jq -r .password)
-
-# Create Kubernetes secrets
-kubectl create secret generic catalog-db-secret \
-  --namespace retail-app \
-  --from-literal=username=catalogadmin \
-  --from-literal=password=$MYSQL_PASSWORD \
-  --from-literal=host=$MYSQL_ENDPOINT \
-  --from-literal=port=3306 \
-  --from-literal=database=catalog
-
-kubectl create secret generic orders-db-secret \
-  --namespace retail-app \
-  --from-literal=username=ordersadmin \
-  --from-literal=password=$POSTGRES_PASSWORD \
-  --from-literal=host=$POSTGRES_ENDPOINT \
-  --from-literal=port=5432 \
-  --from-literal=database=orders
-
-# Deploy with RDS values
-helm install retail-app retail-app/retail-app \
-  --namespace retail-app \
-  --values ../k8s/retail-app-values-rds.yaml \
-  --wait \
-  --timeout 10m
-```
-
-#### 4. Deploy Ingress
+####2.CreateNamespace
 
 ```bash
-kubectl apply -f ../k8s/ingress.yaml
+kubectlcreatenamespaceretail-app
 ```
 
-## Verification and Testing
+####3.DeployApplication
 
-### 1. Check Pod Status
+**WithoutRDS(in-clusterdatabases):**
+```bash
+helminstallretail-appretail-app/retail-app\
+--namespaceretail-app\
+--values../k8s/retail-app-values.yaml\
+--wait\
+--timeout10m
+```
+
+**WithRDS:**
+```bash
+#First,getRDSendpointsfromTerraform
+cd../terraform
+MYSQL_ENDPOINT=$(terraformoutput-rawrds_mysql_endpoint)
+POSTGRES_ENDPOINT=$(terraformoutput-rawrds_postgres_endpoint)
+
+#GetRDSpasswordsfromSecretsManager
+MYSQL_PASSWORD=$(awssecretsmanagerget-secret-value--secret-idbedrock/rds/mysql-credentials--querySecretString--outputtext|jq-r.password)
+POSTGRES_PASSWORD=$(awssecretsmanagerget-secret-value--secret-idbedrock/rds/postgres-credentials--querySecretString--outputtext|jq-r.password)
+
+#CreateKubernetessecrets
+kubectlcreatesecretgenericcatalog-db-secret\
+--namespaceretail-app\
+--from-literal=username=catalogadmin\
+--from-literal=password=$MYSQL_PASSWORD\
+--from-literal=host=$MYSQL_ENDPOINT\
+--from-literal=port=3306\
+--from-literal=database=catalog
+
+kubectlcreatesecretgenericorders-db-secret\
+--namespaceretail-app\
+--from-literal=username=ordersadmin\
+--from-literal=password=$POSTGRES_PASSWORD\
+--from-literal=host=$POSTGRES_ENDPOINT\
+--from-literal=port=5432\
+--from-literal=database=orders
+
+#DeploywithRDSvalues
+helminstallretail-appretail-app/retail-app\
+--namespaceretail-app\
+--values../k8s/retail-app-values-rds.yaml\
+--wait\
+--timeout10m
+```
+
+####4.DeployIngress
 
 ```bash
-kubectl get pods -n retail-app
+kubectlapply-f../k8s/ingress.yaml
 ```
 
-All pods should be in `Running` state:
-```
-NAME                        READY   STATUS    RESTARTS   AGE
-ui-xxx                      1/1     Running   0          2m
-catalog-xxx                 1/1     Running   0          2m
-orders-xxx                  1/1     Running   0          2m
-cart-xxx                    1/1     Running   0          2m
-checkout-xxx                1/1     Running   0          2m
-assets-xxx                  1/1     Running   0          2m
-```
+##VerificationandTesting
 
-### 2. Check Services
+###1.CheckPodStatus
 
 ```bash
-kubectl get svc -n retail-app
+kubectlgetpods-nretail-app
 ```
 
-### 3. Check Ingress
+Allpodsshouldbein`Running`state:
+```
+NAMEREADYSTATUSRESTARTSAGE
+ui-xxx1/1Running02m
+catalog-xxx1/1Running02m
+orders-xxx1/1Running02m
+cart-xxx1/1Running02m
+checkout-xxx1/1Running02m
+assets-xxx1/1Running02m
+```
+
+###2.CheckServices
 
 ```bash
-kubectl get ingress -n retail-app
+kubectlgetsvc-nretail-app
 ```
 
-Wait for the ALB to be provisioned (2-5 minutes):
-```
-NAME                  CLASS   HOSTS   ADDRESS                                    PORTS   AGE
-retail-app-ingress   alb     *       xxx.us-east-1.elb.amazonaws.com           80      3m
-```
-
-### 4. Access the Application
+###3.CheckIngress
 
 ```bash
-# Get ALB URL
-ALB_URL=$(kubectl get ingress retail-app-ingress -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-echo "Application URL: http://$ALB_URL"
-
-# Test with curl
-curl http://$ALB_URL
-
-# Or open in browser
-open http://$ALB_URL  # macOS
-xdg-open http://$ALB_URL  # Linux
-start http://$ALB_URL  # Windows
+kubectlgetingress-nretail-app
 ```
 
-### 5. Test Lambda Function
+WaitfortheALBtobeprovisioned(2-5minutes):
+```
+NAMECLASSHOSTSADDRESSPORTSAGE
+retail-app-ingressalb*xxx.us-east-1.elb.amazonaws.com803m
+```
+
+###4.AccesstheApplication
 
 ```bash
-# Upload test file
-echo "Test product image" > test-image.jpg
-aws s3 cp test-image.jpg s3://bedrock-assets-alt-soe-025-0275/products/
+#GetALBURL
+ALB_URL=$(kubectlgetingressretail-app-ingress-nretail-app-ojsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo"ApplicationURL:http://$ALB_URL"
 
-# Check Lambda logs
-aws logs tail /aws/lambda/bedrock-asset-processor --follow
+#Testwithcurl
+curlhttp://$ALB_URL
+
+#Oropeninbrowser
+openhttp://$ALB_URL#macOS
+xdg-openhttp://$ALB_URL#Linux
+starthttp://$ALB_URL#Windows
 ```
 
-Expected output in logs:
-```
-Image received: products/test-image.jpg
-```
-
-### 6. Test CloudWatch Logging
+###5.TestLambdaFunction
 
 ```bash
-# View EKS control plane logs
-aws logs tail /aws/eks/project-bedrock-cluster/cluster --follow
+#Uploadtestfile
+echo"Testproductimage">test-image.jpg
+awss3cptest-image.jpgs3://bedrock-assets-alt-soe-025-0275/products/
 
-# View container logs
-kubectl logs -f deployment/ui -n retail-app
+#CheckLambdalogs
+awslogstail/aws/lambda/bedrock-asset-processor--follow
 ```
 
-### 7. Test Developer Access
+Expectedoutputinlogs:
+```
+Imagereceived:products/test-image.jpg
+```
+
+###6.TestCloudWatchLogging
 
 ```bash
-# Get developer credentials
-cd terraform
-terraform output developer_access_key_id
-terraform output developer_secret_access_key
+#ViewEKScontrolplanelogs
+awslogstail/aws/eks/project-bedrock-cluster/cluster--follow
 
-# Configure a separate AWS profile
-aws configure --profile bedrock-dev
-# Enter the developer credentials
-
-# Test read access (should work)
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev
-
-# Update kubeconfig with developer profile
-aws eks update-kubeconfig --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev
-
-# Test Kubernetes read access (should work)
-kubectl get pods -n retail-app
-kubectl get nodes
-kubectl describe pod <pod-name> -n retail-app
-
-# Test write access (should fail)
-kubectl delete pod <pod-name> -n retail-app
-# Error: User cannot delete resource "pods" in API group ""
+#Viewcontainerlogs
+kubectllogs-fdeployment/ui-nretail-app
 ```
 
-## Optional: RDS Integration
-
-If you deployed with `enable_rds = true`, the application is already using RDS. Here's how to verify:
-
-### 1. Check RDS Instances
+###7.TestDeveloperAccess
 
 ```bash
-aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,Endpoint.Address,DBInstanceStatus]'
+#Getdevelopercredentials
+cdterraform
+terraformoutputdeveloper_access_key_id
+terraformoutputdeveloper_secret_access_key
+
+#ConfigureaseparateAWSprofile
+awsconfigure--profilebedrock-dev
+#Enterthedevelopercredentials
+
+#Testreadaccess(shouldwork)
+awseksdescribe-cluster--nameproject-bedrock-cluster--regionus-east-1--profilebedrock-dev
+
+#Updatekubeconfigwithdeveloperprofile
+awseksupdate-kubeconfig--nameproject-bedrock-cluster--regionus-east-1--profilebedrock-dev
+
+#TestKubernetesreadaccess(shouldwork)
+kubectlgetpods-nretail-app
+kubectlgetnodes
+kubectldescribepod<pod-name>-nretail-app
+
+#Testwriteaccess(shouldfail)
+kubectldeletepod<pod-name>-nretail-app
+#Error:Usercannotdeleteresource"pods"inAPIgroup""
 ```
 
-### 2. Connect to RDS (for testing)
+##Optional:RDSIntegration
+
+Ifyoudeployedwith`enable_rds=true`,theapplicationisalreadyusingRDS.Here'showtoverify:
+
+###1.CheckRDSInstances
 
 ```bash
-# Get credentials from Secrets Manager
-MYSQL_ENDPOINT=$(cd terraform && terraform output -raw rds_mysql_endpoint)
-MYSQL_PASSWORD=$(aws secretsmanager get-secret-value --secret-id bedrock/rds/mysql-credentials --query SecretString --output text | jq -r .password)
-
-# Connect (requires mysql client)
-mysql -h $MYSQL_ENDPOINT -u catalogadmin -p$MYSQL_PASSWORD catalog
+awsrdsdescribe-db-instances--query'DBInstances[*].[DBInstanceIdentifier,Endpoint.Address,DBInstanceStatus]'
 ```
 
-### 3. Verify Application is Using RDS
+###2.ConnecttoRDS(fortesting)
 
 ```bash
-# Check catalog pod logs
-kubectl logs -l app=catalog -n retail-app | grep -i "database"
+#GetcredentialsfromSecretsManager
+MYSQL_ENDPOINT=$(cdterraform&&terraformoutput-rawrds_mysql_endpoint)
+MYSQL_PASSWORD=$(awssecretsmanagerget-secret-value--secret-idbedrock/rds/mysql-credentials--querySecretString--outputtext|jq-r.password)
 
-# The logs should show connection to RDS endpoint
+#Connect(requiresmysqlclient)
+mysql-h$MYSQL_ENDPOINT-ucatalogadmin-p$MYSQL_PASSWORDcatalog
 ```
 
-## Optional: HTTPS Configuration
-
-### 1. Request ACM Certificate
+###3.VerifyApplicationisUsingRDS
 
 ```bash
-# Request certificate for your domain
-aws acm request-certificate \
-  --domain-name yourdomain.com \
-  --subject-alternative-names "*.yourdomain.com" \
-  --validation-method DNS \
-  --region us-east-1
+#Checkcatalogpodlogs
+kubectllogs-lapp=catalog-nretail-app|grep-i"database"
 
-# Get certificate ARN
-aws acm list-certificates --region us-east-1
+#ThelogsshouldshowconnectiontoRDSendpoint
 ```
 
-### 2. Validate Certificate
+##Optional:HTTPSConfiguration
 
-Follow the DNS validation instructions in the AWS Console or CLI.
+###1.RequestACMCertificate
 
-### 3. Update Ingress
+```bash
+#Requestcertificateforyourdomain
+awsacmrequest-certificate\
+--domain-nameyourdomain.com\
+--subject-alternative-names"*.yourdomain.com"\
+--validation-methodDNS\
+--regionus-east-1
 
-Edit `k8s/ingress.yaml`:
+#GetcertificateARN
+awsacmlist-certificates--regionus-east-1
+```
+
+###2.ValidateCertificate
+
+FollowtheDNSvalidationinstructionsintheAWSConsoleorCLI.
+
+###3.UpdateIngress
+
+Edit`k8s/ingress.yaml`:
 
 ```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion:networking.k8s.io/v1
+kind:Ingress
 metadata:
-  name: retail-app-ingress
-  namespace: retail-app
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
+name:retail-app-ingress
+namespace:retail-app
+annotations:
+alb.ingress.kubernetes.io/scheme:internet-facing
+alb.ingress.kubernetes.io/target-type:ip
+alb.ingress.kubernetes.io/certificate-arn:arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID
+alb.ingress.kubernetes.io/listen-ports:'[{"HTTP":80},{"HTTPS":443}]'
+alb.ingress.kubernetes.io/ssl-redirect:'443'
 spec:
-  ingressClassName: alb
-  rules:
-    - host: yourdomain.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ui
-                port:
-                  number: 8080
+ingressClassName:alb
+rules:
+-host:yourdomain.com
+http:
+paths:
+-path:/
+pathType:Prefix
+backend:
+service:
+name:ui
+port:
+number:8080
 ```
 
-Apply the changes:
+Applythechanges:
 ```bash
-kubectl apply -f k8s/ingress.yaml
+kubectlapply-fk8s/ingress.yaml
 ```
 
-### 4. Configure DNS
+###4.ConfigureDNS
 
-Point your domain to the ALB:
+PointyourdomaintotheALB:
 
 ```bash
-ALB_URL=$(kubectl get ingress retail-app-ingress -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-echo "Create a CNAME record: yourdomain.com -> $ALB_URL"
+ALB_URL=$(kubectlgetingressretail-app-ingress-nretail-app-ojsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo"CreateaCNAMErecord:yourdomain.com->$ALB_URL"
 ```
 
-## Troubleshooting
+##Troubleshooting
 
-### Issue: Terraform init fails
+###Issue:Terraforminitfails
 
-**Error**: `Error: Failed to get existing workspaces`
+**Error**:`Error:Failedtogetexistingworkspaces`
 
 **Solution**:
 ```bash
-# Verify AWS credentials
-aws sts get-caller-identity
+#VerifyAWScredentials
+awsstsget-caller-identity
 
-# Check backend bucket exists
-aws s3 ls s3://bedrock-terraform-state-alt-soe-025-0275
+#Checkbackendbucketexists
+awss3lss3://bedrock-terraform-state-alt-soe-025-0275
 
-# Re-run backend setup
-cd scripts
+#Re-runbackendsetup
+cdscripts
 ./setup-backend.sh
 ```
 
-### Issue: EKS cluster creation times out
+###Issue:EKSclustercreationtimesout
 
-**Error**: `timeout while waiting for resource creation`
-
-**Solution**:
-```bash
-# Check CloudFormation stacks
-aws cloudformation describe-stacks --region us-east-1
-
-# If stack is in ROLLBACK state, delete and retry
-terraform destroy -target=module.eks
-terraform apply
-```
-
-### Issue: Pods stuck in Pending state
-
-**Error**: Pods not starting
+**Error**:`timeoutwhilewaitingforresourcecreation`
 
 **Solution**:
 ```bash
-# Check node status
-kubectl get nodes
+#CheckCloudFormationstacks
+awscloudformationdescribe-stacks--regionus-east-1
 
-# Describe pod for details
-kubectl describe pod <pod-name> -n retail-app
-
-# Common causes:
-# 1. Insufficient resources - scale node group
-# 2. Image pull errors - check image name
-# 3. PVC not bound - check storage class
+#IfstackisinROLLBACKstate,deleteandretry
+terraformdestroy-target=module.eks
+terraformapply
 ```
 
-### Issue: ALB not created
+###Issue:PodsstuckinPendingstate
 
-**Error**: Ingress has no ADDRESS
+**Error**:Podsnotstarting
 
 **Solution**:
 ```bash
-# Check ALB controller logs
-kubectl logs -n kube-system deployment/aws-load-balancer-controller
+#Checknodestatus
+kubectlgetnodes
 
-# Verify service account
-kubectl get sa aws-load-balancer-controller -n kube-system -o yaml
+#Describepodfordetails
+kubectldescribepod<pod-name>-nretail-app
 
-# Check IAM role annotations
-kubectl describe sa aws-load-balancer-controller -n kube-system
-
-# Restart ALB controller
-kubectl rollout restart deployment aws-load-balancer-controller -n kube-system
+#Commoncauses:
+#1.Insufficientresources-scalenodegroup
+#2.Imagepullerrors-checkimagename
+#3.PVCnotbound-checkstorageclass
 ```
 
-### Issue: Cannot access application
+###Issue:ALBnotcreated
 
-**Error**: Connection refused or timeout
+**Error**:IngresshasnoADDRESS
 
 **Solution**:
 ```bash
-# Verify ALB is active
-aws elbv2 describe-load-balancers --region us-east-1
+#CheckALBcontrollerlogs
+kubectllogs-nkube-systemdeployment/aws-load-balancer-controller
 
-# Check target health
-ALB_ARN=$(aws elbv2 describe-load-balancers --query "LoadBalancers[?contains(DNSName, 'k8s-retailap')].LoadBalancerArn" --output text)
-aws elbv2 describe-target-health --target-group-arn <target-group-arn>
+#Verifyserviceaccount
+kubectlgetsaaws-load-balancer-controller-nkube-system-oyaml
 
-# Check security groups
-kubectl get ingress retail-app-ingress -n retail-app -o yaml | grep alb.ingress
+#CheckIAMroleannotations
+kubectldescribesaaws-load-balancer-controller-nkube-system
+
+#RestartALBcontroller
+kubectlrolloutrestartdeploymentaws-load-balancer-controller-nkube-system
 ```
 
-### Issue: Lambda not triggering
+###Issue:Cannotaccessapplication
 
-**Error**: No logs when uploading to S3
+**Error**:Connectionrefusedortimeout
 
 **Solution**:
 ```bash
-# Check Lambda function exists
-aws lambda get-function --function-name bedrock-asset-processor
+#VerifyALBisactive
+awselbv2describe-load-balancers--regionus-east-1
 
-# Check S3 event notification
-aws s3api get-bucket-notification-configuration --bucket bedrock-assets-alt-soe-025-0275
+#Checktargethealth
+ALB_ARN=$(awselbv2describe-load-balancers--query"LoadBalancers[?contains(DNSName,'k8s-retailap')].LoadBalancerArn"--outputtext)
+awselbv2describe-target-health--target-group-arn<target-group-arn>
 
-# Test Lambda manually
-aws lambda invoke --function-name bedrock-asset-processor --payload '{"Records":[{"s3":{"bucket":{"name":"test"},"object":{"key":"test.jpg"}}}]}' response.json
-cat response.json
+#Checksecuritygroups
+kubectlgetingressretail-app-ingress-nretail-app-oyaml|grepalb.ingress
 ```
 
-### Issue: Developer cannot access cluster
+###Issue:Lambdanottriggering
 
-**Error**: `error: You must be logged in to the server (Unauthorized)`
+**Error**:NologswhenuploadingtoS3
 
 **Solution**:
 ```bash
-# Verify IAM user exists
-aws iam get-user --user-name bedrock-dev-view
+#CheckLambdafunctionexists
+awslambdaget-function--function-namebedrock-asset-processor
 
-# Check aws-auth ConfigMap
-kubectl get configmap aws-auth -n kube-system -o yaml
+#CheckS3eventnotification
+awss3apiget-bucket-notification-configuration--bucketbedrock-assets-alt-soe-025-0275
 
-# Verify RBAC binding
-kubectl get clusterrolebinding bedrock-developer-view-binding -o yaml
-
-# Re-apply aws-auth
-cd terraform
-terraform apply -target=module.k8s_rbac
+#TestLambdamanually
+awslambdainvoke--function-namebedrock-asset-processor--payload'{"Records":[{"s3":{"bucket":{"name":"test"},"object":{"key":"test.jpg"}}}]}'response.json
+catresponse.json
 ```
 
-## Generate Grading JSON
+###Issue:Developercannotaccesscluster
 
+**Error**:`error:Youmustbeloggedintotheserver(Unauthorized)`
+
+**Solution**:
 ```bash
-cd terraform
-terraform output -json > ../grading.json
-cat ../grading.json
+#VerifyIAMuserexists
+awsiamget-user--user-namebedrock-dev-view
+
+#Checkaws-authConfigMap
+kubectlgetconfigmapaws-auth-nkube-system-oyaml
+
+#VerifyRBACbinding
+kubectlgetclusterrolebindingbedrock-developer-view-binding-oyaml
+
+#Re-applyaws-auth
+cdterraform
+terraformapply-target=module.k8s_rbac
 ```
 
-Verify the JSON contains:
-- `cluster_endpoint`
-- `cluster_name`
-- `region`
-- `vpc_id`
-- `assets_bucket_name`
-
-## Next Steps
-
-1. ✅ Verify all pods are running
-2. ✅ Test application access
-3. ✅ Test Lambda function
-4. ✅ Test developer access
-5. ✅ Generate grading.json
-6. ✅ Commit code to GitHub
-7. ✅ Prepare submission document
-
-## Cleanup
-
-When you're done and want to destroy all resources:
+##GenerateGradingJSON
 
 ```bash
-cd scripts
+cdterraform
+terraformoutput-json>../grading.json
+cat../grading.json
+```
+
+VerifytheJSONcontains:
+-`cluster_endpoint`
+-`cluster_name`
+-`region`
+-`vpc_id`
+-`assets_bucket_name`
+
+##NextSteps
+
+1.✅Verifyallpodsarerunning
+2.✅Testapplicationaccess
+3.✅TestLambdafunction
+4.✅Testdeveloperaccess
+5.✅Generategrading.json
+6.✅CommitcodetoGitHub
+7.✅Preparesubmissiondocument
+
+##Cleanup
+
+Whenyou'redoneandwanttodestroyallresources:
+
+```bash
+cdscripts
 ./cleanup.sh
 ```
 
-Or manually:
+Ormanually:
 ```bash
-# Delete application
-helm uninstall retail-app -n retail-app
-kubectl delete namespace retail-app
+#Deleteapplication
+helmuninstallretail-app-nretail-app
+kubectldeletenamespaceretail-app
 
-# Destroy infrastructure
-cd terraform
-terraform destroy
+#Destroyinfrastructure
+cdterraform
+terraformdestroy
 
-# Delete backend (optional)
-aws s3 rb s3://bedrock-terraform-state-alt-soe-025-0275 --force
-aws dynamodb delete-table --table-name bedrock-terraform-locks
+#Deletebackend(optional)
+awss3rbs3://bedrock-terraform-state-alt-soe-025-0275--force
+awsdynamodbdelete-table--table-namebedrock-terraform-locks
 ```
 
 ---
 
-## Summary Checklist
+##SummaryChecklist
 
-- [ ] All prerequisites installed
-- [ ] AWS credentials configured
-- [ ] Backend setup complete
-- [ ] Terraform applied successfully
-- [ ] kubectl configured
-- [ ] Application deployed
-- [ ] All pods running
-- [ ] Application accessible via ALB
-- [ ] Lambda function tested
-- [ ] CloudWatch logs verified
-- [ ] Developer access tested
-- [ ] grading.json generated
-- [ ] Code committed to GitHub
-- [ ] Documentation complete
+-[]Allprerequisitesinstalled
+-[]AWScredentialsconfigured
+-[]Backendsetupcomplete
+-[]Terraformappliedsuccessfully
+-[]kubectlconfigured
+-[]Applicationdeployed
+-[]Allpodsrunning
+-[]ApplicationaccessibleviaALB
+-[]Lambdafunctiontested
+-[]CloudWatchlogsverified
+-[]Developeraccesstested
+-[]grading.jsongenerated
+-[]CodecommittedtoGitHub
+-[]Documentationcomplete
 
-**Congratulations! Your Project Bedrock deployment is complete! 🎉**
+**Congratulations!YourProjectBedrockdeploymentiscomplete!🎉**

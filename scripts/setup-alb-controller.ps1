@@ -1,39 +1,39 @@
-# ALB Ingress Controller Setup Script
+#ALBIngressControllerSetupScript
 
-$CLUSTER_NAME = "project-bedrock-cluster"
-$AWS_ACCOUNT_ID = "197104194412"
-$REGION = "us-east-1"
-$VPC_ID = "vpc-0a8f9d36574fed19d"
+$CLUSTER_NAME="project-bedrock-cluster"
+$AWS_ACCOUNT_ID="197104194412"
+$REGION="us-east-1"
+$VPC_ID="vpc-0a8f9d36574fed19d"
 
-Write-Host "Setting up AWS Load Balancer Controller..." -ForegroundColor Green
+Write-Host"SettingupAWSLoadBalancerController..."-ForegroundColorGreen
 
-# Step 1: Get OIDC provider
-Write-Host "`n1. Getting OIDC provider..." -ForegroundColor Yellow
-$OIDC_ID = (aws eks describe-cluster --name $CLUSTER_NAME --region $REGION --query "cluster.identity.oidc.issuer" --output text).Split('/')[-1]
-Write-Host "OIDC Provider ID: $OIDC_ID"
+#Step1:GetOIDCprovider
+Write-Host"`n1.GettingOIDCprovider..."-ForegroundColorYellow
+$OIDC_ID=(awseksdescribe-cluster--name$CLUSTER_NAME--region$REGION--query"cluster.identity.oidc.issuer"--outputtext).Split('/')[-1]
+Write-Host"OIDCProviderID:$OIDC_ID"
 
-# Step 2: Create IAM policy (if not exists)
-Write-Host "`n2. Creating/Verifying IAM Policy..." -ForegroundColor Yellow
-try {
-    aws iam get-policy --policy-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy" 2>$null
-    Write-Host "Policy already exists"
-} catch {
-    Write-Host "Policy not found, will be created by Helm"
+#Step2:CreateIAMpolicy(ifnotexists)
+Write-Host"`n2.Creating/VerifyingIAMPolicy..."-ForegroundColorYellow
+try{
+awsiamget-policy--policy-arn"arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy"2>$null
+Write-Host"Policyalreadyexists"
+}catch{
+Write-Host"Policynotfound,willbecreatedbyHelm"
 }
 
-# Step 3: Install ALB Controller using Helm
-Write-Host "`n3. Installing AWS Load Balancer Controller via Helm..." -ForegroundColor Yellow
+#Step3:InstallALBControllerusingHelm
+Write-Host"`n3.InstallingAWSLoadBalancerControllerviaHelm..."-ForegroundColorYellow
 
-wsl bash -c @"
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-  -n kube-system \
-  --set clusterName=$CLUSTER_NAME \
-  --set serviceAccount.create=true \
-  --set serviceAccount.name=aws-load-balancer-controller \
-  --set region=$REGION \
-  --set vpcId=$VPC_ID \
-  --set serviceAccount.annotations.'eks\.amazonaws\.com/role-arn'=arn:aws:iam::${AWS_ACCOUNT_ID}:role/AmazonEKSLoadBalancerControllerRole \
-  --wait --timeout 5m
+wslbash-c@"
+helminstallaws-load-balancer-controllereks/aws-load-balancer-controller\
+-nkube-system\
+--setclusterName=$CLUSTER_NAME\
+--setserviceAccount.create=true\
+--setserviceAccount.name=aws-load-balancer-controller\
+--setregion=$REGION\
+--setvpcId=$VPC_ID\
+--setserviceAccount.annotations.'eks\.amazonaws\.com/role-arn'=arn:aws:iam::${AWS_ACCOUNT_ID}:role/AmazonEKSLoadBalancerControllerRole\
+--wait--timeout5m
 "@
 
-Write-Host "`n✅ ALB Controller installation complete!" -ForegroundColor Green
+Write-Host"`n✅ALBControllerinstallationcomplete!"-ForegroundColorGreen

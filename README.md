@@ -111,7 +111,7 @@ The infrastructure includes:
 └──────────────────────────────────────────────────────────┘
 ```
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 bedrock-infra/
@@ -249,7 +249,7 @@ kubectl get ingress -n retail-app
 
 Access the application at: `http://<ALB-DNS-NAME>`
 
-## 🔧 Configuration
+## Configuration
 
 ### Key Resources
 
@@ -379,7 +379,7 @@ echo "Application URL: http://$ALB_URL"
 
 See the [Security](#-security) section above for testing IAM and RBAC permissions.
 
-## 📦 CI/CD Pipeline
+## CI/CD Pipeline
 
 The GitHub Actions workflow automates:
 
@@ -404,7 +404,7 @@ Add the following secrets to your GitHub repository:
 
 **Settings > Secrets and variables > Actions > New repository secret**
 
-## 🏆 Bonus Features
+## Bonus Features
 
 ### RDS Managed Databases
 
@@ -449,7 +449,7 @@ terraform output -json > ../grading.json
 - `developer_access_key_id`: IAM user access key (sensitive)
 - `developer_secret_access_key`: IAM user secret (sensitive)
 
-## 🧹 Cleanup
+## Cleanup
 
 **WARNING**: This will delete all resources!
 
@@ -465,12 +465,12 @@ cd terraform
 terraform destroy
 ```
 
-## 📚 Documentation
+## Documentation
 
 - [Deployment Guide](docs/DEPLOYMENT_GUIDE.md) - Detailed step-by-step guide
 - [Architecture Details](docs/ARCHITECTURE.md) - In-depth architecture information
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### EKS Cluster Not Accessible
 
@@ -518,38 +518,38 @@ aws s3api get-bucket-notification-configuration --bucket bedrock-assets-alt-soe-
 aws lambda get-function --function-name bedrock-asset-processor
 ```
 
-## 🤝 Contributing
+## Contributing
 
 This is an assessment project. Contributions are not accepted at this time.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 👤 Author
+## Author
 
-**Student**: ALT/SOE/025/0275  
-**GitHub**: [@ififrank2013](https://github.com/ififrank2013)  
-**Institution**: AltSchool Africa  
-**Program**: Barakat Cohort - Third Semester  
+**Student**: Ifeanyi Ike  
+**Disclaimer**: This repository was just to deploy a demo Retail store app. All resources deployed would be destroyed after grading.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- **InnovateMart Inc.** - Fictional company for this assessment
-- **AWS** - Cloud infrastructure provider
-- **Terraform** - Infrastructure as Code tool
-- **Kubernetes** - Container orchestration
-- **AltSchool Africa** - Educational institution
-
-## 📞 Support
 
 For issues or questions related to this project:
-1. Check the [Troubleshooting](#-troubleshooting) section
+1. Check the [Troubleshooting](#troubleshooting) section
 2. Review the documentation in `/docs`
 3. Open an issue on GitHub
 
 ---
 
-**Project Status**: Complete  
+
+## Support
+
+For issues or questions related to this project:
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Review the documentation in `/docs`
+3. Open an issue on GitHub
+
+---
+
 **Last Updated**: February 2026  
 **Version**: 1.0.0
