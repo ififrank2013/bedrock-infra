@@ -2,7 +2,7 @@
 
 [![Terraform](https://img.shields.io/badge/Terraform-1.5+-purple.svg)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/AWS-EKS-orange.svg)](https://aws.amazon.com/eks/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 
 ## Overview
 
@@ -22,6 +22,8 @@ The infrastructure includes:
 - **ALB** (Bonus): Application Load Balancer with Ingress controller
 
 ### Architecture Diagram
+
+[![Architecture](./architecture.svg)](High-Level Architecture Diagram)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
