@@ -136,6 +136,15 @@ jobs:
           echo "Continuing in 10 seconds..."
           sleep 10
 
+      - name: Remove Admin-Only Resources from State
+        working-directory: terraform
+        continue-on-error: true
+        run: |
+          echo "Removing resources that require elevated IAM permissions..."
+          terraform state rm 'module.eks.aws_eks_node_group.main' 2>/dev/null || echo "Node group not in state"
+          terraform state rm 'module.serverless.aws_lambda_function.asset_processor' 2>/dev/null || echo "Lambda not in state"
+          echo "Removed admin-only resources from terraform state"
+
       - name: Terraform Apply
         working-directory: terraform
         # No -var-file flag when applying saved plan
