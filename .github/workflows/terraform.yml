@@ -138,7 +138,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: terraform
-        run: terraform apply -auto-approve -var-file="cicd.tfvars" tfplan
+        run: terraform apply -auto-approve tfplan
 
       - name: Export Outputs to grading.json
         working-directory: terraform
