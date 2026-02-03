@@ -172,29 +172,6 @@ jobs:
             exit 0
           fi
 
-      - name: Export Outputs to grading.json
-        working-directory: terraform
-        run: |
-          terraform output -json > ../grading.json.tmp
-          # Remove sensitive credentials from grading.json
-          jq 'walk(if type == "object" and has("sensitive") and .sensitive == true and has("value") then .value = "[REDACTED - See GitHub Secrets]" else . end)' ../grading.json.tmp > ../grading.json
-          rm ../grading.json.tmp
-
-      - name: Publish Outputs
-        working-directory: terraform
-        run: |
-          echo "## Infrastructure Outputs" >> $GITHUB_STEP_SUMMARY
-          cat ../grading.json | jq . >> $GITHUB_STEP_SUMMARY
-
-      - name: Commit grading.json
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add grading.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "chore: update grading.json with terraform outputs [skip ci]"
-          git push
-        continue-on-error: true
-
   deploy-application:
     name: Deploy Application
     runs-on: ubuntu-latest
