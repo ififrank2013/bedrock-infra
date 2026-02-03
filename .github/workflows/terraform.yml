@@ -138,20 +138,20 @@ jobs:
 
       - name: Terraform Apply
         working-directory: terraform
-        run: terraform apply -auto-approve -lock=false -var-file="cicd.tfvars" tfplan 2>&1 | tee apply.log || echo "Apply completed with expected permission errors"
+        run: terraform apply -auto-approve -lock=false tfplan 2>&1 | tee apply.log || echo "Apply completed with expected permission errors"
 
       - name: Check Apply Status
         working-directory: terraform
         run: |
           if grep -q "Error:" apply.log; then
-            echo "⚠️ Apply completed with some resource errors (expected for admin-only resources)"
+            echo "NOTE: Apply completed with some resource errors (expected for admin-only resources)"
             echo "These typically include:"
             echo "  - Kubernetes RBAC resources (require EKS admin)"
             echo "  - Lambda function updates (require Lambda permissions)"
             echo "Core infrastructure changes have been applied successfully."
             exit 0
           else
-            echo "✅ Apply completed successfully"
+            echo "SUCCESS: Apply completed successfully"
             exit 0
           fi
 
