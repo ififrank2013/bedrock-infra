@@ -22,12 +22,12 @@
   "developer_access_key_id": {
     "sensitive": true,
     "type": "string",
-    "value": "[REDACTED - See GitHub Secrets]"
+    "value": "[REDACTED - See GitHub Secrets.]"
   },
   "developer_secret_access_key": {
     "sensitive": true,
     "type": "string",
-    "value": "[REDACTED - See GitHub Secrets]"
+    "value": "[REDACTED - See GitHub Secrets.]"
   },
   "lambda_function_name": {
     "sensitive": false,
