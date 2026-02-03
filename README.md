@@ -63,9 +63,9 @@ bedrock-infra/
 │   └── workflows/
 │       └── terraform.yml        # CI/CD pipeline
 ├── docs/                        # Documentation
-│   ├── DEPLOYMENT_GUIDE.md      # Detailed deployment guide
-│   └── ARCHITECTURE.md          # Architecture details
+│   └── DEPLOYMENT_STEPS.md      # Step-by-step deployment guide
 ├── README.md                    # This file
+├── PIPELINE_GUIDE.md            # Pipeline trigger and usage guide
 └── grading.json                 # Terraform outputs for grading
 ```
 
