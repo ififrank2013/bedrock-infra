@@ -46,4 +46,11 @@ tmp/
 temp/
 *.tmp
 
+# Unused policy files
+terraform-secrets-policy.json
+terraform-state-policy.json
+ARCHITECTURE.md
+generate-grading-json.sh
+docs/SUBMISSION_TEMPLATE.md
+
 architecture.html
