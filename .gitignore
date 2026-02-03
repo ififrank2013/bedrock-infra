@@ -52,5 +52,6 @@ terraform-state-policy.json
 ARCHITECTURE.md
 generate-grading-json.sh
 docs/SUBMISSION_TEMPLATE.md
+docs/PROJECT_SUMMARY.md
 
 architecture.html
