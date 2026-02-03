@@ -1,16 +1,16 @@
-# 🚀 DEPLOYMENT STEPS - Execute These Commands in Order
+# DEPLOYMENT STEPS - Execute These Commands in Order
 
 This guide walks you through deploying Project Bedrock from start to finish.
 
-## ⚠️ IMPORTANT PREREQUISITES
+## IMPORTANT PREREQUISITES
 
 Before starting, ensure you have:
-1. ✅ AWS Account with appropriate IAM permissions
-2. ✅ AWS CLI v2.x installed and configured
-3. ✅ Terraform v1.5+ installed
-4. ✅ kubectl v1.28+ installed
-5. ✅ Helm v3.13+ installed
-6. ✅ Git installed
+1. AWS Account with appropriate IAM permissions
+2. AWS CLI v2.x installed and configured
+3. Terraform v1.5+ installed
+4. kubectl v1.28+ installed
+5. Helm v3.13+ installed
+6. Git installed
 
 ---
 
@@ -70,7 +70,7 @@ aws dynamodb list-tables | Select-String "bedrock-terraform-locks"
 
 **Expected Output:**
 ```
-✅ Backend setup complete!
+Backend setup complete!
 ```
 
 ---
@@ -93,7 +93,7 @@ terraform apply
 
 When prompted, type `yes` and press Enter.
 
-**⏱️ This will take 15-20 minutes. Coffee break time! ☕**
+**This will take 15-20 minutes.**
 
 **Expected Output:**
 ```
@@ -143,11 +143,11 @@ cd ..\scripts
 .\deploy-app.ps1
 ```
 
-**⏱️ This will take 5-10 minutes.**
+**This will take 5-10 minutes.**
 
 **Expected Output:**
 ```
-✅ Deployment complete!
+Deployment complete!
 Application URL: http://k8s-retailap-xxxxx.us-east-1.elb.amazonaws.com
 ```
 
@@ -399,7 +399,7 @@ aws s3 ls s3://bedrock-terraform-state-alt-soe-025-0275/bedrock/
 
 ---
 
-## 📝 SUBMISSION CHECKLIST
+## SUBMISSION CHECKLIST
 
 Before submitting, ensure:
 
@@ -425,17 +425,17 @@ Before submitting, ensure:
 ## 🎉 CONGRATULATIONS!
 
 You have successfully:
-- ✅ Deployed a production-grade EKS cluster
-- ✅ Configured VPC with public/private subnets
-- ✅ Implemented IAM and RBAC security
-- ✅ Set up CloudWatch observability
-- ✅ Created serverless event processing
-- ✅ Deployed a microservices application
-- ✅ Implemented CI/CD pipeline
-- ✅ Added RDS managed databases (bonus)
-- ✅ Configured ALB with Ingress (bonus)
+- Deployed a production-grade EKS cluster
+- Configured VPC with public/private subnets
+- Implemented IAM and RBAC security
+- Set up CloudWatch observability
+- Created serverless event processing
+- Deployed a microservices application
+- Implemented CI/CD pipeline
+- Added RDS managed databases (bonus)
+- Configured ALB with Ingress (bonus)
 
-Your Project Bedrock infrastructure is complete and ready for grading! 🚀
+Your Project Bedrock infrastructure is complete and ready for grading.
 
 ---
 
@@ -455,7 +455,7 @@ For detailed troubleshooting, see `/docs/DEPLOYMENT_GUIDE.md`.
 
 ## 🧹 CLEANUP (ONLY AFTER GRADING)
 
-**⚠️ WARNING: This will delete everything!**
+**WARNING: This will delete everything!**
 
 ```powershell
 # Delete application
@@ -479,4 +479,4 @@ aws dynamodb delete-table --table-name bedrock-terraform-locks
 
 ---
 
-**Good luck with your submission! 🎯**
+**Good luck with your submission!**

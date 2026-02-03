@@ -8,6 +8,10 @@ resource "aws_cloudwatch_log_group" "eks_cluster" {
   name              = "/aws/eks/${var.cluster_name}/cluster"
   retention_in_days = 7
 
+  lifecycle {
+    ignore_changes = [kms_key_id]
+  }
+
   tags = merge(
     var.tags,
     {
@@ -65,19 +69,21 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_observability_xray" {
 # EKS Add-on: Amazon CloudWatch Observability
 ################################################################################
 
-resource "aws_eks_addon" "cloudwatch_observability" {
-  cluster_name             = var.cluster_name
-  addon_name               = "amazon-cloudwatch-observability"
-  addon_version            = var.cloudwatch_addon_version
-  service_account_role_arn = aws_iam_role.cloudwatch_observability.arn
-
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.cluster_name}-cloudwatch-observability-addon"
-    }
-  )
-}
+# CloudWatch Observability add-on temporarily disabled due to version compatibility issues with EKS 1.34
+# Can be enabled later by uncommenting the resource below
+# resource "aws_eks_addon" "cloudwatch_observability" {
+#   cluster_name             = var.cluster_name
+#   addon_name               = "amazon-cloudwatch-observability"
+#   addon_version            = var.cloudwatch_addon_version
+#   service_account_role_arn = aws_iam_role.cloudwatch_observability.arn
+#
+#   tags = merge(
+#     var.tags,
+#     {
+#       Name = "${var.cluster_name}-cloudwatch-observability-addon"
+#     }
+#   )
+# }
 
 ################################################################################
 # Alternative: FluentBit for Container Logs (if add-on not available)

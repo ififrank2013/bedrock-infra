@@ -30,16 +30,7 @@ Write-Host "🔒 Enabling versioning on S3 bucket..." -ForegroundColor Yellow
 aws s3api put-bucket-versioning --bucket $BACKEND_BUCKET --versioning-configuration Status=Enabled
 
 Write-Host "🔐 Enabling encryption on S3 bucket..." -ForegroundColor Yellow
-$encryptionConfig = @'
-{
-    "Rules": [{
-        "ApplyServerSideEncryptionByDefault": {
-            "SSEAlgorithm": "AES256"
-        }
-    }]
-}
-'@
-aws s3api put-bucket-encryption --bucket $BACKEND_BUCKET --server-side-encryption-configuration $encryptionConfig
+aws s3api put-bucket-encryption --bucket $BACKEND_BUCKET --server-side-encryption-configuration '{\"Rules\":[{\"ApplyServerSideEncryptionByDefault\":{\"SSEAlgorithm\":\"AES256\"}}]}'
 
 Write-Host "🚫 Blocking public access to S3 bucket..." -ForegroundColor Yellow
 aws s3api put-public-access-block `

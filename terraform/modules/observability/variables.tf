@@ -28,7 +28,7 @@ variable "oidc_provider_url" {
 variable "cloudwatch_addon_version" {
   description = "Version of the CloudWatch Observability add-on"
   type        = string
-  default     = "v1.9.1-eksbuild.1"
+  default     = "v1.0.0-eksbuild.1"
 }
 
 variable "tags" {

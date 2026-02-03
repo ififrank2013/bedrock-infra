@@ -15,7 +15,7 @@ output "cloudwatch_observability_role_arn" {
   value       = aws_iam_role.cloudwatch_observability.arn
 }
 
-output "cloudwatch_addon_id" {
-  description = "ID of the CloudWatch Observability add-on"
-  value       = aws_eks_addon.cloudwatch_observability.id
-}
+# output "cloudwatch_addon_id" {
+#   description = "ID of the CloudWatch Observability add-on"
+#   value       = aws_eks_addon.cloudwatch_observability.id
+# }

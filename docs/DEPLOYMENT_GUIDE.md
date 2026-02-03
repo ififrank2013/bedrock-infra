@@ -16,7 +16,7 @@ This comprehensive guide will walk you through deploying the complete Project Be
 
 ## Prerequisites
 
-### 1. Install Required Tools
+### 1. Install Required Tools (If not present)
 
 #### AWS CLI
 
@@ -108,6 +108,7 @@ choco install kubernetes-helm
 ```bash
 helm version  # Should show v3.13+
 ```
+##### Now, you are set. Let us now configure AWS credentials
 
 ### 2. Configure AWS Credentials
 
@@ -153,7 +154,7 @@ Edit `terraform/variables.tf` if you want to customize:
 
 ```hcl
 variable "aws_region" {
-  default     = "us-east-1"  # Keep as us-east-1 for grading
+  default     = "us-east-1"
 }
 
 variable "cluster_version" {
@@ -161,19 +162,19 @@ variable "cluster_version" {
 }
 
 variable "node_instance_types" {
-  default     = ["t3.large"]  # Adjust based on workload
+  default     = ["t3.large"] 
 }
 
 variable "enable_rds" {
-  default     = true          # Set to false to disable RDS
+  default     = true          # RDS settings
 }
 
 variable "enable_alb_ingress" {
-  default     = true          # Set to false to disable ALB
+  default     = true          # Enable ALB
 }
 ```
 
-**⚠️ Important**: Do NOT change resource names:
+**Important**: Do NOT change resource names:
 - Cluster name: `project-bedrock-cluster`
 - VPC name: `project-bedrock-vpc`
 - Namespace: `retail-app`
@@ -252,13 +253,13 @@ terraform apply
 
 Type `yes` when prompted.
 
-**⏱️ Expected duration**: 15-20 minutes
+**Expected duration**: 15-20 minutes
 
 **Progress indicators:**
-- ✅ VPC created (~2 min)
-- ✅ EKS cluster created (~10 min)
-- ✅ Node group created (~5 min)
-- ✅ Add-ons installed (~2 min)
+- VPC created (~2 min)
+- EKS cluster created (~10 min)
+- Node group created (~5 min)
+- Add-ons installed (~2 min)
 
 ### 4. Verify Deployment
 

@@ -117,7 +117,7 @@ variable "enable_rds" {
 variable "enable_alb_ingress" {
   description = "Enable ALB Ingress Controller (bonus feature)"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "domain_name" {

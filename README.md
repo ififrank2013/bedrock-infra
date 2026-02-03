@@ -4,16 +4,12 @@
 [![AWS](https://img.shields.io/badge/AWS-EKS-orange.svg)](https://aws.amazon.com/eks/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## 📋 Overview
+## Overview
 
 **Project Bedrock** is InnovateMart's production-grade Amazon EKS infrastructure for deploying microservices applications. This repository contains Infrastructure as Code (IaC) using Terraform to provision a complete, secure, and observable Kubernetes environment on AWS.
 
-### Student Information
-- **Student ID**: ALT/SOE/025/0275
-- **GitHub**: [@ififrank2013](https://github.com/ififrank2013)
-- **Project**: Barakat Third Semester Capstone
 
-## 🏗️ Architecture
+## Architecture
 
 The infrastructure includes:
 
@@ -157,7 +153,7 @@ bedrock-infra/
 └── grading.json                 # Terraform outputs for grading
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -219,7 +215,7 @@ terraform plan
 terraform apply
 ```
 
-⏱️ **Estimated time**: 15-20 minutes
+**Estimated time**: 15-20 minutes
 
 ### Step 4: Configure kubectl
 
@@ -279,7 +275,7 @@ enable_rds           = true
 enable_alb_ingress   = true
 ```
 
-## 🔒 Security
+## Security
 
 ### IAM Developer Access
 
@@ -301,8 +297,8 @@ kubectl get nodes
 kubectl describe pod <pod-name> -n retail-app
 
 # These should fail (write operations)
-kubectl delete pod <pod-name> -n retail-app  # ❌ Forbidden
-kubectl apply -f manifest.yaml               # ❌ Forbidden
+kubectl delete pod <pod-name> -n retail-app  # Forbidden
+kubectl apply -f manifest.yaml               # Forbidden
 ```
 
 ### Network Security
@@ -312,7 +308,7 @@ kubectl apply -f manifest.yaml               # ❌ Forbidden
 - **Security Groups**: Least-privilege ingress/egress rules
 - **Encryption**: S3 and RDS encryption enabled
 
-## 📊 Observability
+## Observability
 
 ### CloudWatch Logging
 
@@ -348,7 +344,7 @@ kubectl logs -f <pod-name> -n retail-app
 kubectl get events -n retail-app --sort-by='.lastTimestamp'
 ```
 
-## 🎯 Testing
+## Testing
 
 ### Test Lambda Function
 
@@ -432,7 +428,7 @@ Set `enable_rds = true` in `terraform/variables.tf` (default)
 2. Update `k8s/ingress.yaml` with certificate ARN
 3. Uncomment HTTPS annotations
 
-## 📝 Outputs
+## Outputs
 
 After successful deployment, retrieve outputs:
 
@@ -455,7 +451,7 @@ terraform output -json > ../grading.json
 
 ## 🧹 Cleanup
 
-**⚠️ WARNING**: This will delete all resources!
+**WARNING**: This will delete all resources!
 
 ```bash
 cd scripts
@@ -554,6 +550,6 @@ For issues or questions related to this project:
 
 ---
 
-**Project Status**: ✅ Complete  
+**Project Status**: Complete  
 **Last Updated**: February 2026  
 **Version**: 1.0.0
