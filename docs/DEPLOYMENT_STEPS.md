@@ -11,7 +11,7 @@ Before starting, ensure you have:
 4. kubectl v1.28+ installed
 5. Helm v3.13+ installed
 6. Git installed
-
+git 
 ---
 
 ## STEP 1: Initialize Git Repository
@@ -246,26 +246,9 @@ kubectl delete $POD
 
 ---
 
-## STEP 10: Generate Grading JSON
 
-```powershell
-# Generate the grading.json file
-cd ..\terraform
-terraform output -json | Out-File -FilePath ..\grading.json -Encoding UTF8
 
-# View the file
-Get-Content ..\grading.json
-
-# Add to git
-cd ..
-git add grading.json
-git commit -m "Add grading.json with terraform outputs"
-git push
-```
-
----
-
-## STEP 11: Setup GitHub Actions Secrets
+## STEP 10: Setup GitHub Actions Secrets
 
 1. Go to your repository on GitHub: https://github.com/ififrank2013/bedrock-infra
 2. Click **Settings** → **Secrets and variables** → **Actions**
@@ -282,7 +265,7 @@ git push
 
 ---
 
-## STEP 12: Test CI/CD Pipeline
+## STEP 11: Test CI/CD Pipeline
 
 ```powershell
 # Create a test branch
@@ -305,52 +288,9 @@ Then:
 
 ---
 
-## STEP 13: Create Architecture Diagram
 
-Use one of these tools to create your diagram:
-- **Draw.io**: https://app.diagrams.net/
-- **Lucidchart**: https://www.lucidchart.com/
-- **Excalidraw**: https://excalidraw.com/
 
-Reference the ASCII diagram in README.md for structure.
-
-Save the diagram as `architecture.png` and upload to your repository:
-
-```powershell
-# After creating the diagram
-cd docs
-# Place your architecture.png file here
-
-# Add to git
-git add architecture.png
-git commit -m "Add architecture diagram"
-git push
-```
-
----
-
-## STEP 14: Prepare Submission Document
-
-1. Open `/docs/SUBMISSION_TEMPLATE.md`
-2. Fill in all the required information:
-   - Your full name
-   - Your email
-   - Actual ALB URL from Step 7
-   - Developer credentials from Step 9
-   - Link to architecture diagram
-
-3. Export as PDF or share as Google Doc
-
-### Create Google Doc:
-1. Copy contents of SUBMISSION_TEMPLATE.md
-2. Go to Google Docs: https://docs.google.com/document/
-3. Paste and format the content
-4. Get shareable link with "Viewer" access
-5. Share with Innocent Chukwuemeka
-
----
-
-## STEP 15: Final Verification Checklist
+## STEP 13: Final Verification Checklist
 
 Run these commands to verify everything:
 
@@ -399,45 +339,6 @@ aws s3 ls s3://bedrock-terraform-state-alt-soe-025-0275/bedrock/
 
 ---
 
-## SUBMISSION CHECKLIST
-
-Before submitting, ensure:
-
-- [ ] GitHub repository is public or access granted to instructor
-- [ ] All code is pushed to main branch
-- [ ] grading.json is in repository root
-- [ ] README.md is complete and accurate
-- [ ] Architecture diagram is created and added
-- [ ] Application is accessible via ALB URL
-- [ ] All pods are running in retail-app namespace
-- [ ] Lambda function is working (test with S3 upload)
-- [ ] Developer access credentials are documented
-- [ ] CloudWatch logs are enabled and accessible
-- [ ] RDS instances are running (if enabled)
-- [ ] ALB is provisioned and routing traffic
-- [ ] CI/CD pipeline is configured in GitHub Actions
-- [ ] Submission document is prepared (Google Doc or PDF)
-- [ ] All naming conventions are correct
-- [ ] All resources are tagged properly
-
----
-
-## CONGRATULATIONS!
-
-You have successfully:
-- Deployed a production-grade EKS cluster
-- Configured VPC with public/private subnets
-- Implemented IAM and RBAC security
-- Setup CloudWatch observability
-- Created serverless event processing
-- Deployed a microservices application
-- Implemented CI/CD pipeline
-- Added RDS managed databases (bonus)
-- Configured ALB with Ingress (bonus)
-
-Your Project Bedrock infrastructure is complete and ready for grading.
-
----
 
 ## TROUBLESHOOTING
 
@@ -479,5 +380,5 @@ aws dynamodb delete-table --table-name bedrock-terraform-locks
 
 ---
 
-**Good luck with your submission!**
+
 
