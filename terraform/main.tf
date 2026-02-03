@@ -90,6 +90,7 @@ module "serverless" {
 module "observability" {
   source = "./modules/observability"
 
+  aws_region          = var.aws_region
   cluster_name        = var.cluster_name
   cluster_version     = var.cluster_version
   cluster_endpoint    = module.eks.cluster_endpoint

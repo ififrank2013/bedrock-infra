@@ -66,3 +66,21 @@ output "configure_kubectl" {
   description = "Command to configure kubectl"
   value       = "aws eks update-kubeconfig --region ${var.aws_region} --name ${module.eks.cluster_name}"
 }
+
+output "cloudwatch_log_groups" {
+  description = "CloudWatch Log Groups for monitoring"
+  value = {
+    cluster_logs      = module.observability.cloudwatch_log_group_name
+    application_logs  = module.observability.application_log_group_name
+    dataplane_logs    = module.observability.dataplane_log_group_name
+  }
+}
+
+output "view_logs_commands" {
+  description = "Commands to view logs in CloudWatch"
+  value = {
+    cluster_logs     = "aws logs tail ${module.observability.cloudwatch_log_group_name} --follow"
+    application_logs = "aws logs tail ${module.observability.application_log_group_name} --follow"
+    lambda_logs      = "aws logs tail /aws/lambda/${module.serverless.lambda_function_name} --follow"
+  }
+}
