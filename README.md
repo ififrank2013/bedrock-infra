@@ -23,95 +23,9 @@ The infrastructure includes:
 
 ### Architecture Diagram
 
-[![Architecture](./architecture.svg)](High-Level Architecture Diagram)
+![Architecture](./architecture.svg)(High-Level Architecture Diagram)
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         AWS Cloud                            │
-│                       Region: us-east-1                      │
-└─────────────────────────────────────────────────────────────┘
-                              │
-          ┌───────────────────┴───────────────────┐
-          │                                        │
-    ┌─────▼──────┐                        ┌──────▼─────┐
-    │  Route 53  │                        │    ACM     │
-    │    (DNS)   │                        │   (TLS)    │
-    └─────┬──────┘                        └──────┬─────┘
-          │                                       │
-    ┌─────▼───────────────────────────────────────▼─────┐
-    │           Application Load Balancer                │
-    │              (Internet-facing)                     │
-    └─────┬──────────────────────────────────────────────┘
-          │
-    ┌─────▼────────────────────────────────────────────┐
-    │         VPC: project-bedrock-vpc                 │
-    │            CIDR: 10.0.0.0/16                     │
-    └──────────────────────────────────────────────────┘
-          │
-          ├─────────────────────────────────────────────┐
-          │                                              │
-    ┌─────▼──────┐                              ┌──────▼─────┐
-    │  Public    │                              │  Private   │
-    │  Subnets   │                              │  Subnets   │
-    │            │                              │            │
-    │ us-east-1a │                              │ us-east-1a │
-    │ us-east-1b │                              │ us-east-1b │
-    └─────┬──────┘                              └──────┬─────┘
-          │                                            │
-    ┌─────▼──────┐                              ┌─────▼──────────────┐
-    │   NAT GW   │                              │  EKS Cluster       │
-    │            │                              │  project-bedrock-  │
-    │            │                              │  cluster           │
-    └────────────┘                              │                    │
-                                                │  Node Groups       │
-                                                │  - t3.large        │
-                                                │  - 2-5 nodes       │
-                                                └─────┬──────────────┘
-                                                      │
-                        ┌─────────────────────────────┼─────────────────────────┐
-                        │                             │                         │
-                  ┌─────▼──────┐            ┌────────▼────────┐      ┌────────▼────────┐
-                  │  Namespace │            │   RDS MySQL     │      │ RDS PostgreSQL  │
-                  │ retail-app │            │   (Catalog)     │      │   (Orders)      │
-                  │            │            │                 │      │                 │
-                  │ Pods:      │            │ Multi-AZ        │      │ Multi-AZ        │
-                  │ - UI       │            │ Encrypted       │      │ Encrypted       │
-                  │ - Catalog  │◄───────────┤ Automated       │      │ Automated       │
-                  │ - Orders   │            │ Backups         │      │ Backups         │
-                  │ - Cart     │────────────┤                 │      │                 │
-                  │ - Checkout │            └─────────────────┘      └─────────────────┘
-                  │ - Assets   │
-                  └────────────┘
-                        │
-          ┌─────────────┼─────────────┐
-          │             │             │
-    ┌─────▼──────┐ ┌───▼────┐  ┌────▼─────┐
-    │  CloudWatch│ │  Redis │  │ RabbitMQ │
-    │   Logs     │ │        │  │          │
-    │            │ └────────┘  └──────────┘
-    │ - Control  │
-    │   Plane    │
-    │ - Container│
-    │   Logs     │
-    └────────────┘
 
-┌──────────────────────────────────────────────────────────┐
-│               Event-Driven Architecture                   │
-│                                                           │
-│  ┌──────────┐      S3 Event     ┌────────────────┐      │
-│  │    S3    │─────────────────►  │    Lambda      │      │
-│  │  Bucket  │                    │   Function     │      │
-│  │          │                    │                │      │
-│  │ bedrock- │                    │ bedrock-asset- │      │
-│  │ assets-* │                    │ processor      │      │
-│  └──────────┘                    └────────┬───────┘      │
-│                                           │              │
-│                                  ┌────────▼─────────┐    │
-│                                  │   CloudWatch     │    │
-│                                  │   Logs           │    │
-│                                  └──────────────────┘    │
-└──────────────────────────────────────────────────────────┘
-```
 
 ## Repository Structure
 
@@ -533,7 +447,6 @@ This project is licensed under the MIT License.
 **Student**: Ifeanyi Ike  
 **Disclaimer**: This repository was just to deploy a demo Retail store app. All resources deployed would be destroyed after grading.
 
-## Acknowledgments
 
 
 For issues or questions related to this project:
