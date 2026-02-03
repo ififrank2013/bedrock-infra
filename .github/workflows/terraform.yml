@@ -138,6 +138,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: terraform
+        # Important: No -var-file flag when applying saved plan
         run: terraform apply -auto-approve -lock=false tfplan 2>&1 | tee apply.log || echo "Apply completed with expected permission errors"
 
       - name: Check Apply Status
