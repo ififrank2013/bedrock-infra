@@ -139,16 +139,16 @@ EnsureyourIAMuser/rolehaspermissionsfor:
 -CloudWatch(LogGroups)
 -ElasticLoadBalancing(ALB,TargetGroups)
 
-##InitialSetup
+## InitialSetup
 
-###1.ClonetheRepository
+### 1.ClonetheRepository
 
 ```bash
 gitclonehttps://github.com/ififrank2013/bedrock-infra.git
 cdbedrock-infra
 ```
 
-###2.ReviewConfiguration
+### 2.ReviewConfiguration
 
 Edit`terraform/variables.tf`ifyouwanttocustomize:
 
@@ -180,9 +180,9 @@ default=true#EnableALB
 -Namespace:`retail-app`
 -Developeruser:`bedrock-dev-view`
 
-##BackendConfiguration
+## BackendConfiguration
 
-###1.RunBackendSetupScript
+### 1.RunBackendSetupScript
 
 **OnLinux/macOS:**
 ```bash
@@ -199,34 +199,34 @@ cdscripts
 cd..
 ```
 
-Thisscriptcreates:
+This script creates:
 -S3bucket:`bedrock-terraform-state-alt-soe-025-0275`
 -DynamoDBtable:`bedrock-terraform-locks`
 
-###2.VerifyBackendResources
+### 2.Verify Backend Resources
 
 ```bash
-#CheckS3bucket
-awss3ls|grepbedrock-terraform-state
+# CheckS3bucket
+awss3ls | grepbedrock-terraform-state
 
-#CheckDynamoDBtable
-awsdynamodbdescribe-table--table-namebedrock-terraform-locks
+#Check DynamoDB table
+aws dynamodb describe-table--table-namebedrock-terraform-locks
 ```
 
-##InfrastructureDeployment
+## Infrastructure Deployment
 
-###1.InitializeTerraform
+### 1.Initialize Terraform
 
 ```bash
 cdterraform
 terraforminit
 ```
 
-Expectedoutput:
+Expected output:
 ```
-Initializingmodules...
-Initializingthebackend...
-Successfullyconfiguredthebackend"s3"!
+Initializing modules...
+Initializing the backend...
+Successfully configured the backend "s3"!
 Terraformhasbeensuccessfullyinitialized!
 ```
 
