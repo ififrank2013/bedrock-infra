@@ -66,17 +66,17 @@ resource "aws_iam_role_policy_attachment" "fluent_bit" {
 }
 
 ################################################################################
-# CloudWatch Log Groups for Application Logs
+# CloudWatch Log Groups for retail-store-sample-app Logs
 ################################################################################
 
 resource "aws_cloudwatch_log_group" "application_logs" {
-  name              = "/aws/eks/${var.cluster_name}/application"
+  name              = "/aws/eks/${var.cluster_name}/retail-store-sample-app"
   retention_in_days = 7
 
   tags = merge(
     var.tags,
     {
-      Name = "${var.cluster_name}-application-logs"
+      Name = "${var.cluster_name}-retail-store-sample-app-logs"
     }
   )
 }
@@ -177,7 +177,7 @@ resource "kubernetes_config_map" "fluent_bit_config" {
           Name                cloudwatch_logs
           Match               kube.*
           region              ${var.aws_region}
-          log_group_name      /aws/eks/${var.cluster_name}/application
+          log_group_name      /aws/eks/${var.cluster_name}/retail-store-sample-app
           log_stream_prefix   from-fluent-bit-
           auto_create_group   false
 

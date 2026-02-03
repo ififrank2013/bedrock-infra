@@ -16,7 +16,7 @@ output "cloudwatch_observability_role_arn" {
 }
 
 output "application_log_group_name" {
-  description = "Name of the CloudWatch log group for application logs"
+  description = "Name of the CloudWatch log group for retail-store-sample-app logs"
   value       = aws_cloudwatch_log_group.application_logs.name
 }
 

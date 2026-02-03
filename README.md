@@ -16,7 +16,7 @@ The infrastructure includes:
 - **VPC**: Custom VPC with public and private subnets across 2 Availability Zones
 - **EKS Cluster**: Kubernetes v1.31+ with managed node groups
 - **IAM**: Least-privilege IAM roles and policies for cluster and developer access
-- **Observability**: CloudWatch logging for control plane and container logs
+- **Observability**: CloudWatch logging for control plane and retail-store-sample-app logs
 - **Serverless**: S3 bucket with Lambda function for event-driven asset processing
 - **RDS** (Bonus): Managed MySQL and PostgreSQL databases
 - **ALB** (Bonus): Application Load Balancer with Ingress controller
