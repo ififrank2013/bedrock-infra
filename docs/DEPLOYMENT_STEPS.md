@@ -290,7 +290,7 @@ Then:
 
 
 
-## STEP 13: Final Verification Checklist
+## STEP 12: Final Verification Checklist
 
 Run these commands to verify everything:
 
@@ -354,7 +354,7 @@ For detailed troubleshooting, see `/docs/DEPLOYMENT_GUIDE.md`.
 
 ---
 
-## CLEANUP (ONLY AFTER GRADING)
+## CLEANUP
 
 **WARNING: This will delete everything!**
 
@@ -379,6 +379,7 @@ aws dynamodb delete-table --table-name bedrock-terraform-locks
 ```
 
 ---
+
 
 
 
