@@ -4,6 +4,22 @@
     "type": "string",
     "value": "bedrock-assets-alt-soe-025-0275"
   },
+  "cloudwatch_log_groups": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "cluster_logs": "string",
+        "dataplane_logs": "string",
+        "retail_store_sample_app_logs": "string"
+      }
+    ],
+    "value": {
+      "cluster_logs": "/aws/eks/project-bedrock-cluster/cluster",
+      "dataplane_logs": "/aws/eks/project-bedrock-cluster/dataplane",
+      "retail_store_sample_app_logs": "/aws/eks/project-bedrock-cluster/retail-store-sample-app"
+    }
+  },
   "cluster_endpoint": {
     "sensitive": false,
     "type": "string",
@@ -76,6 +92,22 @@
     "sensitive": false,
     "type": "string",
     "value": "us-east-1"
+  },
+  "view_logs_commands": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "application_logs": "string",
+        "cluster_logs": "string",
+        "lambda_logs": "string"
+      }
+    ],
+    "value": {
+      "application_logs": "aws logs tail /aws/eks/project-bedrock-cluster/retail-store-sample-app --follow",
+      "cluster_logs": "aws logs tail /aws/eks/project-bedrock-cluster/cluster --follow",
+      "lambda_logs": "aws logs tail /aws/lambda/bedrock-asset-processor --follow"
+    }
   },
   "vpc_id": {
     "sensitive": false,
