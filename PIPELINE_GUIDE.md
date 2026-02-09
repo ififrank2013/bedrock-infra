@@ -116,7 +116,7 @@ The pipeline consists of four main jobs:
 ### Check Status
 
 Pipeline status indicators:
-- **Green checkmark**: Success
+- **Success**: Success
 - **Yellow circle**: In progress
 - **Red X**: Failed
 - **Gray**: Skipped
@@ -132,26 +132,26 @@ You'll receive notifications via:
 
 ### On Pull Request
 ```
-✓ Terraform Plan completed
-✓ Validation checks passed
+Terraform Plan completed
+Validation checks passed
 → No infrastructure changes applied
 → Review plan in workflow logs
 ```
 
 ### On Push to Main
 ```
-✓ Terraform Apply executed
-✓ Application deployed
-✓ Infrastructure updated
+Terraform Apply executed
+Application deployed
+Infrastructure updated
 → Check outputs in workflow summary
 ```
 
 ### Manual Trigger with 'apply'
 ```
-✓ Manual approval step (10 second delay)
-✓ Resource import completed
-✓ Fresh plan created
-✓ Changes applied to AWS
+Manual approval step (10 second delay)
+Resource import completed
+Fresh plan created
+Changes applied to AWS
 ```
 
 ## Troubleshooting

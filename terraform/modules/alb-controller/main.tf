@@ -225,6 +225,18 @@ resource "aws_iam_policy" "alb_controller" {
           "elasticloadbalancing:RemoveTags"
         ]
         Resource = [
+          "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
+          "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
+          "arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "elasticloadbalancing:AddTags",
+          "elasticloadbalancing:RemoveTags"
+        ]
+        Resource = [
           "arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*",
           "arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*",
           "arn:aws:elasticloadbalancing:*:*:listener-rule/net/*/*/*",
