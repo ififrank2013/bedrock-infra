@@ -281,13 +281,14 @@ jobs:
 
       - name: Get Application URL
         run: |
-          LB_URL=$(kubectl get service ui-loadbalancer -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          LB_URL=$(kubectl get service ui-loadbalancer -n retail-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
           if [ -z "$LB_URL" ]; then
             echo "LoadBalancer URL not yet available"
           else
             echo "Application URL: http://$LB_URL"
             echo "APPLICATION_URL=http://$LB_URL" >> $GITHUB_ENV
           fi
+        continue-on-error: true
 
       - name: Verify Application Deployment
         run: |
